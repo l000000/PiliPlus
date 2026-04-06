@@ -637,7 +637,7 @@ abstract final class PageUtils {
     try {
       await WindowController.create(
         WindowConfiguration(
-          hiddenAtLaunch: true,
+          hiddenAtLaunch: false,
           arguments: jsonEncode({
             'type': 'video',
             'data': arguments,

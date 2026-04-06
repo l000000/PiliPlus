@@ -152,6 +152,7 @@ Future<void> _initVideoWindow(WindowController windowController) async {
     try {
       Request();
       Request.setCookie();
+      _videoWindowLog('request init ok');
     } catch (e) {
       _videoWindowLog('Request init error: $e');
     }
@@ -159,16 +160,17 @@ Future<void> _initVideoWindow(WindowController windowController) async {
     SmartDialog.config.toast = SmartConfigToast(
       displayType: SmartToastType.onlyRefresh,
     );
+    _videoWindowLog('smart dialog config ok');
 
     try {
-      // 子窗口由 desktop_multi_window 创建并管理，避免与 window_manager 冲突
-      await windowController.show();
-      _videoWindowLog('video window show ok');
+      // 子窗口由创建时直接显示，避免在子引擎中调用 show 触发原生崩溃
+      _videoWindowLog('skip windowController.show in sub window');
     } catch (e) {
       _videoWindowLog('video window show error: $e');
     }
 
     // 监听主窗口通过 desktop_multi_window 发送的新视频数据
+    _videoWindowLog('setWindowMethodHandler begin');
     await windowController.setWindowMethodHandler((call) async {
       if (call.method == 'updateVideo') {
         try {
@@ -186,11 +188,12 @@ Future<void> _initVideoWindow(WindowController windowController) async {
         }
         // 将视频窗口置前
         try {
-          await windowController.show();
+          // 不主动调用 show，避免已知原生崩溃路径
         } catch (_) {}
       }
       return null;
     });
+    _videoWindowLog('setWindowMethodHandler ok');
 
     _videoWindowLog('runApp');
     runApp(const MyApp());
