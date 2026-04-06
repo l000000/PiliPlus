@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:PiliPlus/build_config.dart';
@@ -43,6 +44,32 @@ import 'package:path_provider/path_provider.dart';
 import 'package:window_manager/window_manager.dart' hide calcWindowPosition;
 
 WebViewEnvironment? webViewEnvironment;
+Map<String, dynamic>? startupVideoArguments;
+
+Map<String, dynamic>? _parseStartupVideoArguments(List<String> args) {
+  for (final arg in args) {
+    if (!arg.startsWith('--video-window-data=')) {
+      continue;
+    }
+    final encoded = arg.substring('--video-window-data='.length);
+    if (encoded.isEmpty) {
+      return null;
+    }
+    try {
+      final decoded = Uri.decodeComponent(encoded);
+      final data = jsonDecode(decoded);
+      if (data is Map<String, dynamic>) {
+        return data;
+      }
+      if (data is Map) {
+        return data.cast<String, dynamic>();
+      }
+    } catch (_) {
+      return null;
+    }
+  }
+  return null;
+}
 
 Future<void> _initDownPath() async {
   if (PlatformUtils.isDesktop) {
@@ -82,8 +109,9 @@ Future<void> _initAppPath() async {
   appSupportDirPath = (await getApplicationSupportDirectory()).path;
 }
 
-void main() async {
+void main([List<String> args = const []]) async {
   ScaledWidgetsFlutterBinding.ensureInitialized();
+  startupVideoArguments = _parseStartupVideoArguments(args);
   MediaKit.ensureInitialized();
   await _initAppPath();
   try {
@@ -289,7 +317,7 @@ class MyApp extends StatelessWidget {
       locale: const Locale("zh", "CN"),
       fallbackLocale: const Locale("zh", "CN"),
       supportedLocales: const [Locale("zh", "CN"), Locale("en", "US")],
-      initialRoute: '/',
+      initialRoute: startupVideoArguments == null ? '/' : '/videoV',
       getPages: Routes.getPages,
       defaultTransition: Pref.pageTransition,
       builder: FlutterSmartDialog.init(
