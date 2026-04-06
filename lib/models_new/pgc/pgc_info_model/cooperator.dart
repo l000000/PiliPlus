@@ -17,4 +17,11 @@ class Cooperator {
     nickName: json['nick_name'] as String?,
     role: json['role'] as String?,
   );
+
+  Map<String, dynamic> toJson() => {
+    'mid': mid,
+    'avatar': avatar,
+    'nick_name': nickName,
+    'role': role,
+  };
 }

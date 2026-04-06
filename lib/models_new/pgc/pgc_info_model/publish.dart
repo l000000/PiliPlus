@@ -8,4 +8,6 @@ class Publish {
   factory Publish.fromJson(Map<String, dynamic> json) => Publish(
     pubTimeShow: json['pub_time_show'] as String?,
   );
+
+  Map<String, dynamic> toJson() => {'pub_time_show': pubTimeShow};
 }

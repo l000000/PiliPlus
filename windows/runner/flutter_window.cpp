@@ -2,6 +2,7 @@
 
 #include <optional>
 #include <string>
+#include <vector>
 
 #include "flutter/generated_plugin_registrant.h"
 #include "utils.h"
@@ -88,13 +89,25 @@ bool FlutterWindow::OnCreate() {
 
             std::wstring params = L"--video-window-data=";
             params += Utf16FromUtf8(*encoded_video_data);
-            HINSTANCE open_result = ::ShellExecute(
-                nullptr, L"open", exe_path, params.c_str(), nullptr,
-                SW_SHOWNORMAL);
-            if (reinterpret_cast<intptr_t>(open_result) <= 32) {
+            // 路径含空格时 ShellExecute 不可靠，使用 CreateProcessW 并正确引用 exe
+            std::wstring cmd_line = L"\"";
+            cmd_line += exe_path;
+            cmd_line += L"\" ";
+            cmd_line += params;
+            std::vector<wchar_t> cmd_line_buf(cmd_line.begin(), cmd_line.end());
+            cmd_line_buf.push_back(L'\0');
+
+            STARTUPINFOW si{};
+            si.cb = sizeof(si);
+            PROCESS_INFORMATION pi{};
+
+            if (!::CreateProcessW(exe_path, cmd_line_buf.data(), nullptr, nullptr,
+                                  FALSE, 0, nullptr, nullptr, &si, &pi)) {
               result->Error("open_failed", "Failed to create video window.");
               return;
             }
+            ::CloseHandle(pi.hThread);
+            ::CloseHandle(pi.hProcess);
 
             result->Success();
           } else {

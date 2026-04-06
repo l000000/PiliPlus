@@ -75,6 +75,30 @@ import 'package:hive_ce/hive.dart';
 import 'package:media_kit/media_kit.dart' hide Subtitle;
 import 'package:path/path.dart' as path;
 
+VideoType _videoTypeFromRouteArgs(dynamic v) {
+  if (v is VideoType) return v;
+  if (v is String) {
+    try {
+      return VideoType.values.byName(v);
+    } catch (_) {
+      return VideoType.ugc;
+    }
+  }
+  return VideoType.ugc;
+}
+
+SourceType _sourceTypeFromRouteArgs(dynamic v) {
+  if (v is SourceType) return v;
+  if (v is String) {
+    try {
+      return SourceType.values.byName(v);
+    } catch (_) {
+      return SourceType.normal;
+    }
+  }
+  return SourceType.normal;
+}
+
 class VideoDetailController extends GetxController
     with GetTickerProviderStateMixin, BlockMixin {
   /// 路由传参
@@ -312,7 +336,7 @@ class VideoDetailController extends GetxController
       Get.back();
       return;
     }
-    videoType = args['videoType'];
+    videoType = _videoTypeFromRouteArgs(args['videoType']);
     if (videoType == VideoType.pgc) {
       if (!isLoginVideo) {
         _actualVideoType = VideoType.ugc;
@@ -330,7 +354,7 @@ class VideoDetailController extends GetxController
     heroTag = args['heroTag'];
     cover = RxString(args['cover'] ?? '');
 
-    sourceType = args['sourceType'] ?? SourceType.normal;
+    sourceType = _sourceTypeFromRouteArgs(args['sourceType']);
     isFileSource = sourceType == SourceType.file;
     isPlayAll = sourceType != SourceType.normal && !isFileSource;
     if (isFileSource) {

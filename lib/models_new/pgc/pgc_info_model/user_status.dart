@@ -15,4 +15,9 @@ class UserStatus {
         : UserProgress.fromJson(json['progress']),
     favored: json['favored'] as int?,
   );
+
+  Map<String, dynamic> toJson() => {
+    'progress': progress?.toJson(),
+    'favored': favored,
+  };
 }

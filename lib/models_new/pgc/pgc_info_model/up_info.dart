@@ -14,4 +14,10 @@ class UpInfo {
     mid: json['mid'] as int?,
     uname: json['uname'] as String?,
   );
+
+  Map<String, dynamic> toJson() => {
+    'avatar': avatar,
+    'mid': mid,
+    'uname': uname,
+  };
 }

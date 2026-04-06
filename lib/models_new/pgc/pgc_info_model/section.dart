@@ -12,4 +12,8 @@ class Section {
         ?.map((e) => EpisodeItem.fromJson(e as Map<String, dynamic>))
         .toList(),
   );
+
+  Map<String, dynamic> toJson() => {
+    'episodes': episodes?.map((e) => e.toJson()).toList(),
+  };
 }

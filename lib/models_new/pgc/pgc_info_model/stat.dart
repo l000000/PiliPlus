@@ -10,4 +10,14 @@ class PgcStat extends StatDetail {
     share = json["share"];
     view = json["views"];
   }
+
+  Map<String, dynamic> toJson() => {
+    'coins': coin,
+    'danmakus': danmaku,
+    'favorite': favorite,
+    'likes': like,
+    'reply': reply,
+    'share': share,
+    'views': view,
+  };
 }

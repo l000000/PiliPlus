@@ -99,4 +99,27 @@ class PgcInfoModel {
         ? null
         : Brief.fromJson(json['brief'] as Map<String, dynamic>),
   );
+
+  Map<String, dynamic> toJson() => {
+    'actors': actors,
+    'areas': areas?.map((e) => e.toJson()).toList(),
+    'cover': cover,
+    'episodes': episodes?.map((e) => e.toJson()).toList(),
+    'evaluate': evaluate,
+    'media_id': mediaId,
+    'new_ep': newEp?.toJson(),
+    'publish': publish?.toJson(),
+    'rating': rating?.toJson(),
+    'season_id': seasonId,
+    'season_title': seasonTitle,
+    'section': section?.map((e) => e.toJson()).toList(),
+    'stat': stat?.toJson(),
+    'subtitle': subtitle,
+    'title': title,
+    'type': type,
+    'up_info': upInfo?.toJson(),
+    'user_status': userStatus?.toJson(),
+    'cooperators': cooperators?.map((e) => e.toJson()).toList(),
+    'brief': brief?.toJson(),
+  };
 }

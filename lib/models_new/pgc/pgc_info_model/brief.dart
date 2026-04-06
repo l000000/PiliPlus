@@ -23,4 +23,15 @@ class Img {
     aspectRatio: json['aspect_ratio'] ?? 1,
     url: json['url'] as String?,
   );
+
+  Map<String, dynamic> toJson() => {
+    'aspect_ratio': aspectRatio,
+    'url': url,
+  };
+}
+
+extension BriefToJson on Brief {
+  Map<String, dynamic> toJson() => {
+    'img': img?.map((e) => e.toJson()).toList(),
+  };
 }

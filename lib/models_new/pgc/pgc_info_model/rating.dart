@@ -6,4 +6,6 @@ class Rating {
   factory Rating.fromJson(Map<String, dynamic> json) => Rating(
     score: (json['score'] as num?)?.toDouble(),
   );
+
+  Map<String, dynamic> toJson() => {'score': score};
 }

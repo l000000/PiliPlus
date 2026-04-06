@@ -32,6 +32,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
+bool _isPgcVideoType(dynamic v) {
+  if (v is VideoType) return v == VideoType.pgc;
+  if (v is String) return v == VideoType.pgc.name;
+  return false;
+}
+
+PgcInfoModel _pgcItemFromRouteArgs(dynamic v) {
+  if (v is PgcInfoModel) return v;
+  if (v is Map<String, dynamic>) return PgcInfoModel.fromJson(v);
+  if (v is Map) return PgcInfoModel.fromJson(Map<String, dynamic>.from(v));
+  throw StateError('pgcItem 无效');
+}
+
 class PgcIntroController extends CommonIntroController {
   int? seasonId;
   int? epId;
@@ -58,8 +71,8 @@ class PgcIntroController extends CommonIntroController {
     final args = Get.arguments;
     seasonId = args['seasonId'];
     epId = args['epId'];
-    isPgc = args['videoType'] == VideoType.pgc;
-    pgcItem = args['pgcItem'];
+    isPgc = _isPgcVideoType(args['videoType']);
+    pgcItem = _pgcItemFromRouteArgs(args['pgcItem']);
 
     super.onInit();
 

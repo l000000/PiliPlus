@@ -57,4 +57,25 @@ class EpisodeItem extends BaseEpisodeItem {
     title: json['title'] as String?,
     play: json['play'] as int?,
   );
+
+  Map<String, dynamic> toJson() => {
+    'aid': aid,
+    'badge': badge,
+    'bvid': bvid,
+    'cid': cid,
+    'cover': cover,
+    'dimension': dimension?.toJson(),
+    'duration': duration,
+    'ep_id': epId,
+    'from': from,
+    'id': id,
+    'link': link,
+    'long_title': longTitle,
+    'pub_time': pubTime,
+    'share_copy': shareCopy,
+    'share_url': shareUrl,
+    'show_title': showTitle,
+    'title': title,
+    'play': play,
+  };
 }

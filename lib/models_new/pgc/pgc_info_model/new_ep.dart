@@ -8,4 +8,9 @@ class NewEp {
     desc: json['desc'] as String?,
     title: json['title'] as String?,
   );
+
+  Map<String, dynamic> toJson() => {
+    'desc': desc,
+    'title': title,
+  };
 }

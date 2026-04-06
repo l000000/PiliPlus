@@ -10,7 +10,9 @@ import 'package:PiliPlus/http/loading_state.dart';
 import 'package:PiliPlus/http/search.dart';
 import 'package:PiliPlus/http/video.dart';
 import 'package:PiliPlus/models/common/image_preview_type.dart';
+import 'package:PiliPlus/models/common/video/source_type.dart';
 import 'package:PiliPlus/models/common/video/video_type.dart';
+import 'package:PiliPlus/models_new/pgc/pgc_info_model/result.dart';
 import 'package:PiliPlus/models/dynamics/result.dart';
 import 'package:PiliPlus/models_new/pgc/pgc_info_model/episode.dart';
 import 'package:PiliPlus/pages/common/common_intro_controller.dart';
@@ -32,7 +34,7 @@ import 'package:PiliPlus/utils/storage_pref.dart';
 import 'package:PiliPlus/utils/url_utils.dart';
 import 'package:PiliPlus/utils/utils.dart';
 import 'package:floating/floating.dart';
-import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -40,6 +42,15 @@ import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 abstract final class PageUtils {
+  /// 供 Windows 子进程命令行 JSON 序列化（枚举与 PGC 模型等需显式转换）
+  static Object? _windowsVideoArgsToEncodable(Object? o) {
+    if (o == null || o is num || o is bool || o is String) return o;
+    if (o is VideoType) return o.name;
+    if (o is SourceType) return o.name;
+    if (o is PgcInfoModel) return o.toJson();
+    throw UnsupportedError('Windows 新窗口无法序列化: ${o.runtimeType}');
+  }
+
   static RelativeRect menuPosition(Offset offset) {
     return .fromLTRB(offset.dx, offset.dy, offset.dx, 0);
   }
@@ -574,7 +585,34 @@ abstract final class PageUtils {
     };
     if (Platform.isWindows) {
       return Future(() async {
-        final encodedArguments = Uri.encodeComponent(jsonEncode(arguments));
+        late final String encodedArguments;
+        try {
+          encodedArguments = Uri.encodeComponent(
+            jsonEncode(
+              arguments,
+              toEncodable: _windowsVideoArgsToEncodable,
+            ),
+          );
+        } catch (e, st) {
+          if (kDebugMode) {
+            debugPrint('Windows 新窗口参数序列化失败: $e\n$st');
+          }
+          SmartDialog.showToast('无法在独立窗口打开该内容');
+          if (off) {
+            Get.offNamed(
+              '/videoV',
+              arguments: arguments,
+              preventDuplicates: false,
+            );
+          } else {
+            Get.toNamed(
+              '/videoV',
+              arguments: arguments,
+              preventDuplicates: false,
+            );
+          }
+          return;
+        }
         try {
           await const MethodChannel('window_control').invokeMethod(
             'openVideoWindow',
