@@ -24,8 +24,8 @@ abstract final class GStorage {
   static late final Box<int> watchProgress;
   static late final Box<Uint8List>? reply;
 
-  static Future<void> init() async {
-    Hive.init(path.join(appSupportDirPath, 'hive'));
+  static Future<void> init([String? hivePath]) async {
+    Hive.init(hivePath ?? path.join(appSupportDirPath, 'hive'));
     regAdapter();
 
     await Future.wait([
