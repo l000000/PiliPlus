@@ -1,8 +1,10 @@
 #include "flutter_window.h"
 
 #include <optional>
+#include <string>
 
 #include "flutter/generated_plugin_registrant.h"
+#include "utils.h"
 
 #include <flutter/method_channel.h>
 #include <flutter/standard_method_codec.h>
@@ -11,6 +13,26 @@ FlutterWindow::FlutterWindow(const flutter::DartProject& project)
     : project_(project) {}
 
 FlutterWindow::~FlutterWindow() {}
+
+static std::wstring Utf16FromUtf8(const std::string& utf8_string) {
+  if (utf8_string.empty()) {
+    return std::wstring();
+  }
+  int target_length =
+      ::MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, utf8_string.data(),
+                            static_cast<int>(utf8_string.size()), nullptr, 0);
+  if (target_length <= 0) {
+    return std::wstring();
+  }
+  std::wstring utf16_string(target_length, L'\0');
+  int converted_length = ::MultiByteToWideChar(
+      CP_UTF8, MB_ERR_INVALID_CHARS, utf8_string.data(),
+      static_cast<int>(utf8_string.size()), utf16_string.data(), target_length);
+  if (converted_length <= 0) {
+    return std::wstring();
+  }
+  return utf16_string;
+}
 
 bool FlutterWindow::OnCreate() {
   if (!Win32Window::OnCreate()) {
@@ -41,6 +63,39 @@ bool FlutterWindow::OnCreate() {
           if (call.method_name().compare("closeWindow") == 0) {
             HANDLE hProcess = GetCurrentProcess();
             TerminateProcess(hProcess, 0);
+            result->Success();
+          } else if (call.method_name().compare("openVideoWindow") == 0) {
+            const auto* encoded_video_data =
+                std::get_if<std::string>(call.arguments());
+            if (encoded_video_data == nullptr) {
+              result->Error("invalid_args",
+                            "openVideoWindow expects an encoded string.");
+              return;
+            }
+
+            HWND old_video_hwnd = ::FindWindow(L"FLUTTER_RUNNER_WIN32_WINDOW",
+                                               L"piliplus_video");
+            if (old_video_hwnd != NULL) {
+              ::PostMessage(old_video_hwnd, WM_CLOSE, 0, 0);
+            }
+
+            wchar_t exe_path[MAX_PATH];
+            DWORD path_len = ::GetModuleFileName(nullptr, exe_path, MAX_PATH);
+            if (path_len == 0 || path_len == MAX_PATH) {
+              result->Error("open_failed", "Cannot resolve executable path.");
+              return;
+            }
+
+            std::wstring params = L"--video-window-data=";
+            params += Utf16FromUtf8(*encoded_video_data);
+            HINSTANCE open_result = ::ShellExecute(
+                nullptr, L"open", exe_path, params.c_str(), nullptr,
+                SW_SHOWNORMAL);
+            if (reinterpret_cast<intptr_t>(open_result) <= 32) {
+              result->Error("open_failed", "Failed to create video window.");
+              return;
+            }
+
             result->Success();
           } else {
             result->NotImplemented();

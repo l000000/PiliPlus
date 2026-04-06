@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:PiliPlus/common/widgets/image_viewer/gallery_viewer.dart';
@@ -32,6 +34,7 @@ import 'package:PiliPlus/utils/utils.dart';
 import 'package:floating/floating.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -569,6 +572,28 @@ abstract final class PageUtils {
       'heroTag': Utils.makeHeroTag(cid),
       ...?extraArguments,
     };
+    if (Platform.isWindows) {
+      return Future(() async {
+        final encodedArguments = Uri.encodeComponent(jsonEncode(arguments));
+        try {
+          await const MethodChannel('window_control').invokeMethod(
+            'openVideoWindow',
+            encodedArguments,
+          );
+          return;
+        } catch (_) {}
+        try {
+          await Process.start(
+            Platform.resolvedExecutable,
+            ['--video-window-data=$encodedArguments'],
+            mode: ProcessStartMode.detached,
+          );
+          return;
+        } catch (_) {
+          SmartDialog.showToast('新窗口打开失败，请检查 Windows 构建版本');
+        }
+      });
+    }
     if (off) {
       return Get.offNamed(
         '/videoV',

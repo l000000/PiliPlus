@@ -307,7 +307,11 @@ class VideoDetailController extends GetxController
   @override
   void onInit() {
     super.onInit();
-    args = Get.arguments;
+    args = (Get.arguments as Map?) ?? startupVideoArguments ?? const {};
+    if (args.isEmpty) {
+      Get.back();
+      return;
+    }
     videoType = args['videoType'];
     if (videoType == VideoType.pgc) {
       if (!isLoginVideo) {
