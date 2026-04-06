@@ -170,8 +170,12 @@ Future<void> _initVideoWindow(WindowController windowController) async {
     }
 
     // 监听主窗口通过 desktop_multi_window 发送的新视频数据
-    _videoWindowLog('setWindowMethodHandler begin');
-    await windowController.setWindowMethodHandler((call) async {
+    _videoWindowLog('video channel handler begin');
+    const videoWindowChannel = WindowMethodChannel(
+      'video_window_channel',
+      mode: ChannelMode.unidirectional,
+    );
+    await videoWindowChannel.setMethodCallHandler((call) async {
       if (call.method == 'updateVideo') {
         try {
           final data = jsonDecode(call.arguments as String);
@@ -186,14 +190,10 @@ Future<void> _initVideoWindow(WindowController windowController) async {
         } catch (e) {
           _videoWindowLog('updateVideo error: $e');
         }
-        // 将视频窗口置前
-        try {
-          // 不主动调用 show，避免已知原生崩溃路径
-        } catch (_) {}
       }
       return null;
     });
-    _videoWindowLog('setWindowMethodHandler ok');
+    _videoWindowLog('video channel handler ok');
 
     _videoWindowLog('runApp');
     runApp(const MyApp());

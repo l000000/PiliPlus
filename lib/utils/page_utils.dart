@@ -625,7 +625,14 @@ abstract final class PageUtils {
           try {
             final parsed = jsonDecode(argStr);
             if (parsed is Map && parsed['type'] == 'video') {
-              await ctrl.invokeMethod('updateVideo', encodedArguments);
+              const videoWindowChannel = WindowMethodChannel(
+                'video_window_channel',
+                mode: ChannelMode.unidirectional,
+              );
+              await videoWindowChannel.invokeMethod(
+                'updateVideo',
+                encodedArguments,
+              );
               return;
             }
           } catch (_) {}
