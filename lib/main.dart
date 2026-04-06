@@ -161,21 +161,11 @@ Future<void> _initVideoWindow(WindowController windowController) async {
     );
 
     try {
-      await windowManager.ensureInitialized();
-      windowManager.waitUntilReadyToShow(
-        WindowOptions(
-          minimumSize: const Size(400, 720),
-          skipTaskbar: false,
-          title: '${Constants.appName} - Video',
-        ),
-        () async {
-          await windowManager.show();
-          await windowManager.focus();
-        },
-      );
-      _videoWindowLog('windowManager ok');
+      // 子窗口由 desktop_multi_window 创建并管理，避免与 window_manager 冲突
+      await windowController.show();
+      _videoWindowLog('video window show ok');
     } catch (e) {
-      _videoWindowLog('windowManager error: $e');
+      _videoWindowLog('video window show error: $e');
     }
 
     // 监听主窗口通过 desktop_multi_window 发送的新视频数据
@@ -196,8 +186,7 @@ Future<void> _initVideoWindow(WindowController windowController) async {
         }
         // 将视频窗口置前
         try {
-          await windowManager.show();
-          await windowManager.focus();
+          await windowController.show();
         } catch (_) {}
       }
       return null;
