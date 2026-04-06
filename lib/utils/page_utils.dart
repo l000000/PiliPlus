@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:PiliPlus/common/widgets/image_viewer/gallery_viewer.dart';
@@ -32,6 +34,7 @@ import 'package:PiliPlus/utils/utils.dart';
 import 'package:floating/floating.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -569,6 +572,22 @@ abstract final class PageUtils {
       'heroTag': Utils.makeHeroTag(cid),
       ...?extraArguments,
     };
+    if (Platform.isWindows) {
+      return Future(() async {
+        try {
+          await const MethodChannel('window_control').invokeMethod(
+            'openVideoWindow',
+            Uri.encodeComponent(jsonEncode(arguments)),
+          );
+        } catch (_) {
+          await Get.toNamed(
+            '/videoV',
+            arguments: arguments,
+            preventDuplicates: false,
+          );
+        }
+      });
+    }
     if (off) {
       return Get.offNamed(
         '/videoV',
