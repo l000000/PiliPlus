@@ -574,17 +574,23 @@ abstract final class PageUtils {
     };
     if (Platform.isWindows) {
       return Future(() async {
+        final encodedArguments = Uri.encodeComponent(jsonEncode(arguments));
         try {
           await const MethodChannel('window_control').invokeMethod(
             'openVideoWindow',
-            Uri.encodeComponent(jsonEncode(arguments)),
+            encodedArguments,
           );
+          return;
+        } catch (_) {}
+        try {
+          await Process.start(
+            Platform.resolvedExecutable,
+            ['--video-window-data=$encodedArguments'],
+            mode: ProcessStartMode.detached,
+          );
+          return;
         } catch (_) {
-          await Get.toNamed(
-            '/videoV',
-            arguments: arguments,
-            preventDuplicates: false,
-          );
+          SmartDialog.showToast('新窗口打开失败，请检查 Windows 构建版本');
         }
       });
     }

@@ -16,7 +16,7 @@ on:
 
 jobs:
   android:
-    if: ${{ github.event.inputs.build_android == 'true' }}
+    if: ${{ inputs.build_android }}
     name: Build Android
     runs-on: ubuntu-latest
     permissions:
@@ -83,7 +83,7 @@ jobs:
           path: PiliPlus_android_*.apk
 
   win_x64:
-    if: ${{ github.event.inputs.build_win_x64 == 'true' }}
+    if: ${{ inputs.build_win_x64 }}
     uses: ./.github/workflows/win_x64.yml
     permissions:
       contents: read

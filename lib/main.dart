@@ -109,7 +109,7 @@ Future<void> _initAppPath() async {
   appSupportDirPath = (await getApplicationSupportDirectory()).path;
 }
 
-void main([List<String> args = const []]) async {
+void main(List<String> args) async {
   ScaledWidgetsFlutterBinding.ensureInitialized();
   startupVideoArguments = _parseStartupVideoArguments(args);
   MediaKit.ensureInitialized();
