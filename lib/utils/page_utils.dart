@@ -33,10 +33,10 @@ import 'package:PiliPlus/utils/platform_utils.dart';
 import 'package:PiliPlus/utils/storage_pref.dart';
 import 'package:PiliPlus/utils/url_utils.dart';
 import 'package:PiliPlus/utils/utils.dart';
+import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:floating/floating.dart';
 import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -584,53 +584,7 @@ abstract final class PageUtils {
       ...?extraArguments,
     };
     if (Platform.isWindows) {
-      return Future(() async {
-        late final String encodedArguments;
-        try {
-          encodedArguments = Uri.encodeComponent(
-            jsonEncode(
-              arguments,
-              toEncodable: _windowsVideoArgsToEncodable,
-            ),
-          );
-        } catch (e, st) {
-          if (kDebugMode) {
-            debugPrint('Windows 新窗口参数序列化失败: $e\n$st');
-          }
-          SmartDialog.showToast('无法在独立窗口打开该内容');
-          if (off) {
-            Get.offNamed(
-              '/videoV',
-              arguments: arguments,
-              preventDuplicates: false,
-            );
-          } else {
-            Get.toNamed(
-              '/videoV',
-              arguments: arguments,
-              preventDuplicates: false,
-            );
-          }
-          return;
-        }
-        try {
-          await const MethodChannel('window_control').invokeMethod(
-            'openVideoWindow',
-            encodedArguments,
-          );
-          return;
-        } catch (_) {}
-        try {
-          await Process.start(
-            Platform.resolvedExecutable,
-            ['--video-window-data=$encodedArguments'],
-            mode: ProcessStartMode.detached,
-          );
-          return;
-        } catch (_) {
-          SmartDialog.showToast('新窗口打开失败，请检查 Windows 构建版本');
-        }
-      });
+      return _openVideoInNewWindow(arguments);
     }
     if (off) {
       return Get.offNamed(
@@ -644,6 +598,56 @@ abstract final class PageUtils {
         arguments: arguments,
         preventDuplicates: false,
       );
+    }
+  }
+
+  /// Windows: 通过 desktop_multi_window 在独立窗口中播放视频
+  static Future<void> _openVideoInNewWindow(Map arguments) async {
+    late final String encodedArguments;
+    try {
+      encodedArguments = jsonEncode(
+        arguments,
+        toEncodable: _windowsVideoArgsToEncodable,
+      );
+    } catch (e, st) {
+      if (kDebugMode) debugPrint('视频参数序列化失败: $e\n$st');
+      SmartDialog.showToast('无法在独立窗口打开该内容');
+      Get.toNamed('/videoV', arguments: arguments, preventDuplicates: false);
+      return;
+    }
+
+    // 查找已有的视频窗口，向其发送新视频数据
+    try {
+      final controllers = await WindowController.getAll();
+      for (final ctrl in controllers) {
+        final argStr = ctrl.arguments;
+        if (argStr != null && argStr.isNotEmpty) {
+          try {
+            final parsed = jsonDecode(argStr);
+            if (parsed is Map && parsed['type'] == 'video') {
+              await ctrl.invokeMethod('updateVideo', encodedArguments);
+              return;
+            }
+          } catch (_) {}
+        }
+      }
+    } catch (_) {}
+
+    // 没有已有视频窗口，创建新窗口
+    try {
+      await WindowController.create(
+        WindowConfiguration(
+          hiddenAtLaunch: true,
+          arguments: jsonEncode({
+            'type': 'video',
+            'data': arguments,
+          }, toEncodable: _windowsVideoArgsToEncodable),
+        ),
+      );
+    } catch (e) {
+      if (kDebugMode) debugPrint('创建视频窗口失败: $e');
+      SmartDialog.showToast('新窗口打开失败');
+      Get.toNamed('/videoV', arguments: arguments, preventDuplicates: false);
     }
   }
 

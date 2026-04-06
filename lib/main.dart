@@ -29,6 +29,7 @@ import 'package:PiliPlus/utils/storage_pref.dart';
 import 'package:PiliPlus/utils/theme_utils.dart';
 import 'package:PiliPlus/utils/utils.dart';
 import 'package:catcher_2/catcher_2.dart';
+import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -45,31 +46,6 @@ import 'package:window_manager/window_manager.dart' hide calcWindowPosition;
 
 WebViewEnvironment? webViewEnvironment;
 Map<String, dynamic>? startupVideoArguments;
-
-Map<String, dynamic>? _parseStartupVideoArguments(List<String> args) {
-  for (final arg in args) {
-    if (!arg.startsWith('--video-window-data=')) {
-      continue;
-    }
-    final encoded = arg.substring('--video-window-data='.length);
-    if (encoded.isEmpty) {
-      return null;
-    }
-    try {
-      final decoded = Uri.decodeComponent(encoded);
-      final data = jsonDecode(decoded);
-      if (data is Map<String, dynamic>) {
-        return data;
-      }
-      if (data is Map) {
-        return data.cast<String, dynamic>();
-      }
-    } catch (_) {
-      return null;
-    }
-  }
-  return null;
-}
 
 Future<void> _initDownPath() async {
   if (PlatformUtils.isDesktop) {
@@ -119,11 +95,10 @@ void _videoWindowLog(String msg) {
   } catch (_) {}
 }
 
-Future<void> _initVideoWindow() async {
+Future<void> _initVideoWindow(WindowController windowController) async {
   try {
     _videoWindowLog('video window start');
 
-    // 拷贝 Hive 文件到独立目录，避免主进程文件锁冲突
     final videoHivePath = path.join(appSupportDirPath, 'hive_video');
     try {
       final srcDir = Directory(path.join(appSupportDirPath, 'hive'));
@@ -147,7 +122,6 @@ Future<void> _initVideoWindow() async {
       _videoWindowLog('GStorage.init ok');
     } catch (e) {
       _videoWindowLog('GStorage.init error: $e');
-      // Hive 打开失败则尝试空目录
       try {
         final fallbackPath = path.join(appSupportDirPath, 'hive_video_empty');
         final dir = Directory(fallbackPath);
@@ -204,6 +178,31 @@ Future<void> _initVideoWindow() async {
       _videoWindowLog('windowManager error: $e');
     }
 
+    // 监听主窗口通过 desktop_multi_window 发送的新视频数据
+    await windowController.setWindowMethodHandler((call) async {
+      if (call.method == 'updateVideo') {
+        try {
+          final data = jsonDecode(call.arguments as String);
+          if (data is Map<String, dynamic>) {
+            startupVideoArguments = data;
+            Get.offNamed(
+              '/videoV',
+              arguments: data,
+              preventDuplicates: false,
+            );
+          }
+        } catch (e) {
+          _videoWindowLog('updateVideo error: $e');
+        }
+        // 将视频窗口置前
+        try {
+          await windowManager.show();
+          await windowManager.focus();
+        } catch (_) {}
+      }
+      return null;
+    });
+
     _videoWindowLog('runApp');
     runApp(const MyApp());
   } catch (e, st) {
@@ -214,13 +213,29 @@ Future<void> _initVideoWindow() async {
 
 void main(List<String> args) async {
   ScaledWidgetsFlutterBinding.ensureInitialized();
-  startupVideoArguments = _parseStartupVideoArguments(args);
   MediaKit.ensureInitialized();
   await _initAppPath();
 
-  if (startupVideoArguments != null) {
-    await _initVideoWindow();
-    return;
+  // Windows: 通过 desktop_multi_window 检测是否为视频子窗口
+  if (Platform.isWindows) {
+    try {
+      final windowController = await WindowController.fromCurrentEngine();
+      final windowArgStr = windowController.arguments;
+      if (windowArgStr != null && windowArgStr.isNotEmpty) {
+        final windowArgs = jsonDecode(windowArgStr);
+        if (windowArgs is Map<String, dynamic> &&
+            windowArgs['type'] == 'video') {
+          startupVideoArguments =
+              (windowArgs['data'] as Map?)?.cast<String, dynamic>();
+          if (startupVideoArguments != null) {
+            await _initVideoWindow(windowController);
+            return;
+          }
+        }
+      }
+    } catch (e) {
+      _videoWindowLog('desktop_multi_window init check error: $e');
+    }
   }
 
   try {
@@ -324,7 +339,6 @@ void main(List<String> args) async {
   }
 
   if (Pref.enableLog) {
-    // 异常捕获 logo记录
     final customParameters = {
       'BuildConfig':
           '\nBuild Time: ${DateFormatUtils.format(BuildConfig.buildTime, format: DateFormatUtils.longFormatDs)}\n'
@@ -479,7 +493,6 @@ class MyApp extends StatelessWidget {
   /// from [DynamicColorBuilderState.initPlatformState]
   static Future<bool> initPlatformState() async {
     if (_light != null || _dark != null) return true;
-    // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       final corePalette = await DynamicColorPlugin.getCorePalette();
 
@@ -526,9 +539,6 @@ class _CustomHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
     final client = super.createHttpClient(context);
-    // ..maxConnectionsPerHost = 32
-    /// The default value is 15 seconds.
-    //   ..idleTimeout = const Duration(seconds: 15);
     if (kDebugMode || Pref.badCertificateCallback) {
       client.badCertificateCallback = (cert, host, port) => true;
     }

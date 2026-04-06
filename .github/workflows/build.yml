@@ -6,12 +6,27 @@ on:
       build_android:
         description: "Build Android"
         required: false
-        default: true
+        default: false
         type: boolean
       build_win_x64:
         description: "Build Win-x64"
         required: false
-        default: true
+        default: false
+        type: boolean
+      build_linux_x64:
+        description: "Build Linux-x64"
+        required: false
+        default: false
+        type: boolean
+      build_macos:
+        description: "Build macOS"
+        required: false
+        default: false
+        type: boolean
+      build_ios:
+        description: "Build iOS"
+        required: false
+        default: false
         type: boolean
 
 jobs:
@@ -84,6 +99,222 @@ jobs:
 
   win_x64:
     if: ${{ inputs.build_win_x64 }}
-    uses: ./.github/workflows/win_x64.yml
+    name: Build Windows x64
+    runs-on: windows-latest
     permissions:
       contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version-file: pubspec.yaml
+
+      - name: Apply Patch
+        shell: pwsh
+        run: lib/scripts/patch.ps1 windows
+        continue-on-error: true
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Add fastforge and Inno Setup
+        run: |
+          dart pub global activate fastforge
+          choco install innosetup
+
+      - name: Add Chinese language file for Inno Setup
+        run: |
+          Copy-Item "windows/packaging/exe/ChineseSimplified.isl" "C:\Program Files (x86)\Inno Setup 6\Languages\ChineseSimplified.isl"
+        shell: pwsh
+
+      - name: Set and Extract version
+        shell: pwsh
+        run: lib/scripts/build.ps1
+
+      - name: Build Windows
+        run: |
+          fastforge package --platform windows --targets exe --flutter-build-args="dart-define-from-file=pili_release.json"
+
+      - name: Prepare Upload
+        run: |
+          mkdir -p Release/PiliPlus-Win
+          mkdir -p PiliPlus-Win-Setup
+          mv build/windows/x64/runner/Release/* Release/PiliPlus-Win/
+          mv dist/**/*.exe PiliPlus-Win-Setup/PiliPlus_windows_${{env.version}}_x64_setup.exe
+
+      - name: Compress
+        run: |
+          Compress-Archive -Path "Release/PiliPlus-Win" -DestinationPath "PiliPlus_windows_${{env.version}}_x64_portable.zip"
+        shell: pwsh
+
+      - name: Upload windows portable
+        uses: actions/upload-artifact@v7
+        with:
+          archive: false
+          name: Windows-portable-x64
+          path: PiliPlus_windows_*.zip
+
+      - name: Upload windows setup
+        uses: actions/upload-artifact@v7
+        with:
+          archive: false
+          name: Windows-setup-x64
+          path: PiliPlus-Win-Setup/PiliPlus_windows_*.exe
+
+  linux_x64:
+    if: ${{ inputs.build_linux_x64 }}
+    name: Build Linux x64
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake libgtk-3-dev ninja-build libayatana-appindicator3-dev unzip webkit2gtk-4.1 libasound2-dev rpm patchelf
+          sudo apt-get install -y gcc g++ autoconf automake debhelper glslang-dev ladspa-sdk xutils-dev libasound2-dev \
+              libarchive-dev libbluray-dev libbs2b-dev libcaca-dev libcdio-paranoia-dev libdrm-dev \
+              libdav1d-dev libdvdnav-dev libegl1-mesa-dev libepoxy-dev libfontconfig-dev libfreetype6-dev \
+              libfribidi-dev libgl1-mesa-dev libgbm-dev libgme-dev libgsm1-dev libharfbuzz-dev libjpeg-dev \
+              libbrotli-dev liblcms2-dev libmodplug-dev libmp3lame-dev libopenal-dev \
+              libopus-dev libopencore-amrnb-dev libopencore-amrwb-dev libpulse-dev librtmp-dev \
+              libsdl2-dev libsixel-dev libssh-dev libsoxr-dev libspeex-dev libtool \
+              libv4l-dev libva-dev libvdpau-dev libvorbis-dev libvo-amrwbenc-dev \
+              libunwind-dev libvpx-dev libwayland-dev libx11-dev libxext-dev \
+              libxkbcommon-dev libxrandr-dev libxss-dev libxv-dev libxvidcore-dev \
+              linux-libc-dev nasm ninja-build pkg-config python3 python3-docutils wayland-protocols \
+              x11proto-core-dev zlib1g-dev libfdk-aac-dev libtheora-dev libwebp-dev \
+              unixodbc-dev libpq-dev libxxhash-dev libaom-dev \
+              libgtk-3-0 libblkid1 liblzma5 libmpv-dev
+        shell: bash
+
+      - name: Setup flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version-file: pubspec.yaml
+          cache: true
+
+      - name: Set and Extract version
+        shell: pwsh
+        run: lib/scripts/build.ps1
+
+      - name: Apply Patch
+        shell: pwsh
+        run: lib/scripts/patch.ps1 Linux
+        continue-on-error: true
+
+      - name: Build Linux
+        run: flutter build linux --release -v --pub --dart-define-from-file=pili_release.json
+
+      - name: Package .tar.gz
+        run: tar -zcvf PiliPlus_linux_${{ env.version }}_amd64.tar.gz -C build/linux/x64/release/bundle .
+
+      - name: Upload linux package
+        uses: actions/upload-artifact@v7
+        with:
+          archive: false
+          name: Linux-x64-release
+          path: PiliPlus_linux_*.tar.gz
+
+  macos:
+    if: ${{ inputs.build_macos }}
+    name: Build macOS
+    runs-on: macos-26
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version-file: pubspec.yaml
+
+      - name: Set and Extract version
+        shell: pwsh
+        run: lib/scripts/build.ps1
+
+      - name: Apply Patch
+        shell: pwsh
+        run: lib/scripts/patch.ps1 macOS
+        continue-on-error: true
+
+      - name: Build Mac
+        run: flutter build macos --release --dart-define-from-file=pili_release.json
+
+      - name: Prepare Upload
+        run: |
+          npm install --global create-dmg
+          create-dmg build/macos/Build/Products/Release/PiliPlus.app || true
+        continue-on-error: true
+
+      - name: Rename DMG
+        run: mv PiliPlus*.dmg PiliPlus_macos_${{ env.version }}.dmg
+
+      - name: Upload macOS release
+        uses: actions/upload-artifact@v7
+        with:
+          archive: false
+          name: macOS-release
+          path: PiliPlus_macos_*.dmg
+
+  ios:
+    if: ${{ inputs.build_ios }}
+    name: Build iOS
+    runs-on: macos-26
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version-file: pubspec.yaml
+
+      - name: Set and Extract version
+        shell: pwsh
+        run: lib/scripts/build.ps1
+
+      - name: Apply Patch
+        shell: pwsh
+        run: lib/scripts/patch.ps1 iOS
+        continue-on-error: true
+
+      - name: Build iOS
+        run: |
+          flutter build ios --release --no-codesign --dart-define-from-file=pili_release.json
+          ln -sf ./build/ios/iphoneos Payload
+          find Payload/Runner.app/Frameworks -type d -name "*.framework" -exec codesign --force --sign - --preserve-metadata=identifier,entitlements {} \;
+          zip -r9 PiliPlus_ios_${{env.version}}.ipa Payload/Runner.app
+
+      - name: Upload iOS release
+        uses: actions/upload-artifact@v7
+        with:
+          archive: false
+          name: iOS-release
+          path: PiliPlus_ios_*.ipa

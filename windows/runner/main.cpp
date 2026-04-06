@@ -7,42 +7,28 @@
 
 int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
                       _In_ wchar_t *command_line, _In_ int show_command) {
-  std::vector<std::string> command_line_arguments = GetCommandLineArguments();
-  bool is_video_window = false;
-  for (const auto& arg : command_line_arguments) {
-    if (arg.rfind("--video-window-data=", 0) == 0) {
-      is_video_window = true;
-      break;
-    }
+  // 单实例检查：如果主窗口已存在则激活它
+  HWND hwnd = ::FindWindow(L"FLUTTER_RUNNER_WIN32_WINDOW", L"piliplus");
+  if (hwnd != NULL) {
+    ::ShowWindow(hwnd, SW_NORMAL);
+    ::SetForegroundWindow(hwnd);
+    return EXIT_FAILURE;
   }
 
-  if (!is_video_window) {
-    HWND hwnd = ::FindWindow(L"FLUTTER_RUNNER_WIN32_WINDOW", L"piliplus");
-    if (hwnd != NULL) {
-      ::ShowWindow(hwnd, SW_NORMAL);
-      ::SetForegroundWindow(hwnd);
-      return EXIT_FAILURE;
-    }
-  }
-
-  // Attach to console when present (e.g., 'flutter run') or create a
-  // new console when running with a debugger.
   if (!::AttachConsole(ATTACH_PARENT_PROCESS) && ::IsDebuggerPresent()) {
     CreateAndAttachConsole();
   }
 
-  // Initialize COM, so that it is available for use in the library and/or
-  // plugins.
   ::CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
 
   flutter::DartProject project(L"data");
+  std::vector<std::string> command_line_arguments = GetCommandLineArguments();
   project.set_dart_entrypoint_arguments(std::move(command_line_arguments));
 
   FlutterWindow window(project);
   Win32Window::Point origin(10, 10);
   Win32Window::Size size(1280, 720);
-  const wchar_t* window_title = is_video_window ? L"piliplus_video" : L"piliplus";
-  if (!window.Create(window_title, origin, size)) {
+  if (!window.Create(L"piliplus", origin, size)) {
     return EXIT_FAILURE;
   }
   window.SetQuitOnClose(true);
