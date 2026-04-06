@@ -109,15 +109,22 @@ Future<void> _initAppPath() async {
   appSupportDirPath = (await getApplicationSupportDirectory()).path;
 }
 
-void main(List<String> args) async {
-  ScaledWidgetsFlutterBinding.ensureInitialized();
-  startupVideoArguments = _parseStartupVideoArguments(args);
-  final isVideoWindow = startupVideoArguments != null;
-  MediaKit.ensureInitialized();
-  await _initAppPath();
-  String? videoHivePath;
-  if (isVideoWindow) {
-    videoHivePath = path.join(appSupportDirPath, 'hive_video');
+void _videoWindowLog(String msg) {
+  try {
+    final logFile = File(path.join(appSupportDirPath, 'video_window.log'));
+    logFile.writeAsStringSync(
+      '${DateTime.now()}: $msg\n',
+      mode: FileMode.append,
+    );
+  } catch (_) {}
+}
+
+Future<void> _initVideoWindow() async {
+  try {
+    _videoWindowLog('video window start');
+
+    // 拷贝 Hive 文件到独立目录，避免主进程文件锁冲突
+    final videoHivePath = path.join(appSupportDirPath, 'hive_video');
     try {
       final srcDir = Directory(path.join(appSupportDirPath, 'hive'));
       final dstDir = Directory(videoHivePath);
@@ -130,20 +137,98 @@ void main(List<String> args) async {
           }
         }
       }
+      _videoWindowLog('hive copy ok');
     } catch (e) {
-      if (kDebugMode) debugPrint('hive_video copy error: $e');
+      _videoWindowLog('hive copy error: $e');
     }
+
+    try {
+      await GStorage.init(videoHivePath);
+      _videoWindowLog('GStorage.init ok');
+    } catch (e) {
+      _videoWindowLog('GStorage.init error: $e');
+      // Hive 打开失败则尝试空目录
+      try {
+        final fallbackPath = path.join(appSupportDirPath, 'hive_video_empty');
+        final dir = Directory(fallbackPath);
+        if (dir.existsSync()) dir.deleteSync(recursive: true);
+        dir.createSync(recursive: true);
+        await GStorage.init(fallbackPath);
+        _videoWindowLog('GStorage.init fallback ok');
+      } catch (e2) {
+        _videoWindowLog('GStorage.init fallback error: $e2');
+      }
+    }
+
+    try {
+      ScaledWidgetsFlutterBinding.instance.scaleFactor = Pref.uiScale;
+    } catch (_) {}
+
+    try {
+      await Future.wait([_initDownPath(), _initTmpPath()]);
+    } catch (_) {
+      downloadPath = defDownloadPath;
+    }
+
+    Get
+      ..lazyPut(AccountService.new)
+      ..lazyPut(DownloadService.new);
+    HttpOverrides.global = _CustomHttpOverrides();
+
+    try {
+      Request();
+      Request.setCookie();
+    } catch (e) {
+      _videoWindowLog('Request init error: $e');
+    }
+
+    SmartDialog.config.toast = SmartConfigToast(
+      displayType: SmartToastType.onlyRefresh,
+    );
+
+    try {
+      await windowManager.ensureInitialized();
+      windowManager.waitUntilReadyToShow(
+        WindowOptions(
+          minimumSize: const Size(400, 720),
+          skipTaskbar: false,
+          title: '${Constants.appName} - Video',
+        ),
+        () async {
+          await windowManager.show();
+          await windowManager.focus();
+        },
+      );
+      _videoWindowLog('windowManager ok');
+    } catch (e) {
+      _videoWindowLog('windowManager error: $e');
+    }
+
+    _videoWindowLog('runApp');
+    runApp(const MyApp());
+  } catch (e, st) {
+    _videoWindowLog('FATAL: $e\n$st');
+    exit(1);
   }
+}
+
+void main(List<String> args) async {
+  ScaledWidgetsFlutterBinding.ensureInitialized();
+  startupVideoArguments = _parseStartupVideoArguments(args);
+  MediaKit.ensureInitialized();
+  await _initAppPath();
+
+  if (startupVideoArguments != null) {
+    await _initVideoWindow();
+    return;
+  }
+
   try {
-    await GStorage.init(videoHivePath);
+    await GStorage.init();
   } catch (e) {
-    if (isVideoWindow) {
-      if (kDebugMode) debugPrint('video window GStorage init error: $e');
-    } else {
-      await Utils.copyText(e.toString());
-      if (kDebugMode) debugPrint('GStorage init error: $e');
-      exit(0);
-    }
+    await Utils.copyText(e.toString());
+    if (kDebugMode) debugPrint('GStorage init error: $e');
+    exit(0);
   }
   ScaledWidgetsFlutterBinding.instance.scaleFactor = Pref.uiScale;
   await Future.wait([_initDownPath(), _initTmpPath()]);
@@ -152,9 +237,7 @@ void main(List<String> args) async {
     ..lazyPut(DownloadService.new);
   HttpOverrides.global = _CustomHttpOverrides();
 
-  if (!isVideoWindow) {
-    CacheManager.autoClearCache();
-  }
+  CacheManager.autoClearCache();
 
   if (PlatformUtils.isMobile) {
     await Future.wait([
@@ -170,15 +253,13 @@ void main(List<String> args) async {
       setupServiceLocator(),
     ]);
   } else if (Platform.isWindows) {
-    if (!isVideoWindow) {
-      if (await WebViewEnvironment.getAvailableVersion() != null) {
-        webViewEnvironment = await WebViewEnvironment.create(
-          settings: WebViewEnvironmentSettings(
-            userDataFolder:
-                path.join(appSupportDirPath, 'flutter_inappwebview'),
-          ),
-        );
-      }
+    if (await WebViewEnvironment.getAvailableVersion() != null) {
+      webViewEnvironment = await WebViewEnvironment.create(
+        settings: WebViewEnvironmentSettings(
+          userDataFolder:
+              path.join(appSupportDirPath, 'flutter_inappwebview'),
+        ),
+      );
     }
   } else if (Platform.isMacOS) {
     await setupServiceLocator();
@@ -186,9 +267,7 @@ void main(List<String> args) async {
 
   Request();
   Request.setCookie();
-  if (!isVideoWindow) {
-    RequestUtils.syncHistoryStatus();
-  }
+  RequestUtils.syncHistoryStatus();
 
   SmartDialog.config.toast = SmartConfigToast(
     displayType: SmartToastType.onlyRefresh,
