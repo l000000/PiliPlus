@@ -10,7 +10,7 @@ import 'package:PiliPlus/http/loading_state.dart';
 import 'package:PiliPlus/http/search.dart';
 import 'package:PiliPlus/http/video.dart';
 import 'package:PiliPlus/models/common/image_preview_type.dart';
-import 'package:PiliPlus/models/common/video/source_type.dart';
+import 'package:PiliPlus/models/common/video/source_type.dart' as video;
 import 'package:PiliPlus/models/common/video/video_type.dart';
 import 'package:PiliPlus/models_new/pgc/pgc_info_model/result.dart';
 import 'package:PiliPlus/models/dynamics/result.dart';
@@ -46,7 +46,7 @@ abstract final class PageUtils {
   static Object? _windowsVideoArgsToEncodable(Object? o) {
     if (o == null || o is num || o is bool || o is String) return o;
     if (o is VideoType) return o.name;
-    if (o is SourceType) return o.name;
+    if (o is video.SourceType) return o.name;
     if (o is PgcInfoModel) return o.toJson();
     throw UnsupportedError('Windows 新窗口无法序列化: ${o.runtimeType}');
   }
