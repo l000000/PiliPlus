@@ -93,7 +93,7 @@ jobs:
       - name: Upload Android artifacts
         uses: actions/upload-artifact@v7
         with:
-          archive: false
+          archive: true
           name: Android-release
           path: PiliPlus_android_*.apk
 
