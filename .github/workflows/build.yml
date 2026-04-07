@@ -90,12 +90,16 @@ jobs:
             mv "$file" "PiliPlus_android_${{ env.version }}_${abi}.apk"
           done
 
+      - name: Bundle Android artifacts
+        shell: bash
+        run: zip -j "PiliPlus_android_${{ env.version }}_all_abi.zip" PiliPlus_android_*.apk
+
       - name: Upload Android artifacts
         uses: actions/upload-artifact@v7
         with:
           archive: false
           name: Android-release
-          path: PiliPlus_android_*.apk
+          path: PiliPlus_android_${{ env.version }}_all_abi.zip
 
   win_x64:
     if: ${{ inputs.build_win_x64 }}
@@ -157,14 +161,14 @@ jobs:
       - name: Upload windows portable
         uses: actions/upload-artifact@v7
         with:
-          archive: false
+          archive: true
           name: Windows-portable-x64
           path: PiliPlus_windows_*.zip
 
       - name: Upload windows setup
         uses: actions/upload-artifact@v7
         with:
-          archive: false
+          archive: true
           name: Windows-setup-x64
           path: PiliPlus-Win-Setup/PiliPlus_windows_*.exe
 
@@ -226,7 +230,7 @@ jobs:
       - name: Upload linux package
         uses: actions/upload-artifact@v7
         with:
-          archive: false
+          archive: true
           name: Linux-x64-release
           path: PiliPlus_linux_*.tar.gz
 
@@ -273,7 +277,7 @@ jobs:
       - name: Upload macOS release
         uses: actions/upload-artifact@v7
         with:
-          archive: false
+          archive: true
           name: macOS-release
           path: PiliPlus_macos_*.dmg
 
@@ -315,6 +319,6 @@ jobs:
       - name: Upload iOS release
         uses: actions/upload-artifact@v7
         with:
-          archive: false
+          archive: true
           name: iOS-release
           path: PiliPlus_ios_*.ipa
