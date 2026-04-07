@@ -34,12 +34,26 @@ class PlayerFocus extends StatelessWidget {
   final ValueGetter<bool>? onSkipSegment;
   final VoidCallback? onRefresh;
 
-  static bool _shouldHandle(LogicalKeyboardKey logicalKey) {
+  bool get shouldCaptureDirectionalKeys =>
+      isFullScreen && !plPlayerController.showControls.value;
+
+  bool _shouldHandle(LogicalKeyboardKey logicalKey) {
     return logicalKey == LogicalKeyboardKey.tab ||
-        logicalKey == LogicalKeyboardKey.arrowLeft ||
-        logicalKey == LogicalKeyboardKey.arrowRight ||
-        logicalKey == LogicalKeyboardKey.arrowUp ||
-        logicalKey == LogicalKeyboardKey.arrowDown;
+        (shouldCaptureDirectionalKeys &&
+            (logicalKey == LogicalKeyboardKey.arrowLeft ||
+                logicalKey == LogicalKeyboardKey.arrowRight ||
+                logicalKey == LogicalKeyboardKey.arrowUp ||
+                logicalKey == LogicalKeyboardKey.arrowDown)) ||
+        (shouldCaptureDirectionalKeys &&
+            (logicalKey == LogicalKeyboardKey.select ||
+                logicalKey == LogicalKeyboardKey.enter ||
+                logicalKey == LogicalKeyboardKey.numpadEnter)) ||
+        (shouldCaptureDirectionalKeys &&
+            (logicalKey == LogicalKeyboardKey.mediaPlayPause ||
+                logicalKey == LogicalKeyboardKey.mediaPlay ||
+                logicalKey == LogicalKeyboardKey.mediaPause)) ||
+        logicalKey == LogicalKeyboardKey.mediaFastForward ||
+        logicalKey == LogicalKeyboardKey.mediaRewind;
   }
 
   @override
@@ -59,6 +73,8 @@ class PlayerFocus extends StatelessWidget {
 
   bool get isFullScreen => plPlayerController.isFullScreen.value;
   bool get hasPlayer => plPlayerController.videoPlayerController != null;
+  bool get canTogglePlayback =>
+      plPlayerController.isLive || (canPlay?.call() ?? true);
 
   void _setVolume({required bool isIncrease}) {
     final volume = isIncrease
@@ -88,6 +104,32 @@ class PlayerFocus extends StatelessWidget {
 
   bool _handleKey(KeyEvent event) {
     final key = event.logicalKey;
+    final isSelectKey = key == LogicalKeyboardKey.select;
+    final isPlayPauseKey =
+        key == LogicalKeyboardKey.mediaPlayPause ||
+        key == LogicalKeyboardKey.mediaPlay ||
+        key == LogicalKeyboardKey.mediaPause;
+    final isConfirmKey =
+        isSelectKey ||
+        key == LogicalKeyboardKey.enter ||
+        key == LogicalKeyboardKey.numpadEnter;
+    final isDirectionalKey =
+        key == LogicalKeyboardKey.arrowUp ||
+        key == LogicalKeyboardKey.arrowDown ||
+        key == LogicalKeyboardKey.arrowLeft ||
+        key == LogicalKeyboardKey.arrowRight;
+
+    if ((key == LogicalKeyboardKey.escape || key == LogicalKeyboardKey.goBack) &&
+        event is KeyDownEvent &&
+        isFullScreen) {
+      plPlayerController.triggerFullScreen(status: false);
+      return true;
+    }
+
+    if (event is KeyDownEvent && shouldCaptureDirectionalKeys && isDirectionalKey) {
+      plPlayerController.showControls.value = true;
+      return true;
+    }
 
     final isKeyQ = key == LogicalKeyboardKey.keyQ;
     if (isKeyQ || key == LogicalKeyboardKey.keyR) {
@@ -110,12 +152,14 @@ class PlayerFocus extends StatelessWidget {
     }
 
     final isArrowUp = key == LogicalKeyboardKey.arrowUp;
-    if (isArrowUp || key == LogicalKeyboardKey.arrowDown) {
+    if (shouldCaptureDirectionalKeys &&
+        (isArrowUp || key == LogicalKeyboardKey.arrowDown)) {
       _updateVolume(event, isIncrease: isArrowUp);
       return true;
     }
 
-    if (key == LogicalKeyboardKey.arrowRight) {
+    if ((shouldCaptureDirectionalKeys && key == LogicalKeyboardKey.arrowRight) ||
+        key == LogicalKeyboardKey.mediaFastForward) {
       if (!plPlayerController.isLive) {
         if (event is KeyDownEvent) {
           if (hasPlayer && !plPlayerController.longPressStatus.value) {
@@ -144,7 +188,35 @@ class PlayerFocus extends StatelessWidget {
       return true;
     }
 
+    if (key == LogicalKeyboardKey.mediaRewind) {
+      if (!plPlayerController.isLive && event is KeyDownEvent && hasPlayer) {
+        plPlayerController.onBackward(
+          plPlayerController.fastForBackwardDuration,
+        );
+      }
+      return true;
+    }
+
     if (event is KeyDownEvent) {
+      if (isPlayPauseKey && shouldCaptureDirectionalKeys) {
+        if (canTogglePlayback && hasPlayer) {
+          plPlayerController.onDoubleTapCenter();
+          return true;
+        }
+        return false;
+      }
+
+      if (isConfirmKey && shouldCaptureDirectionalKeys) {
+        if (onSkipSegment?.call() ?? false) {
+          return true;
+        }
+        if (canTogglePlayback && hasPlayer) {
+          plPlayerController.onDoubleTapCenter();
+          return true;
+        }
+        return false;
+      }
+
       final isDigit1 = key == LogicalKeyboardKey.digit1;
       if (isDigit1 || key == LogicalKeyboardKey.digit2) {
         if (HardwareKeyboard.instance.isShiftPressed && hasPlayer) {
@@ -159,7 +231,7 @@ class PlayerFocus extends StatelessWidget {
 
       switch (key) {
         case LogicalKeyboardKey.space:
-          if (plPlayerController.isLive || canPlay!()) {
+          if (canTogglePlayback) {
             if (hasPlayer) {
               plPlayerController.onDoubleTapCenter();
             }
@@ -226,23 +298,18 @@ class PlayerFocus extends StatelessWidget {
           }
           return true;
 
-        case LogicalKeyboardKey.enter:
-          if (onSkipSegment?.call() ?? false) {
-            return true;
-          }
-          onSendDanmaku();
-          return true;
       }
 
       if (!plPlayerController.isLive) {
         switch (key) {
           case LogicalKeyboardKey.arrowLeft:
-            if (hasPlayer) {
+            if (shouldCaptureDirectionalKeys && hasPlayer) {
               plPlayerController.onBackward(
                 plPlayerController.fastForBackwardDuration,
               );
+              return true;
             }
-            return true;
+            break;
 
           case LogicalKeyboardKey.keyW:
             if (HardwareKeyboard.instance.isMetaPressed) {
