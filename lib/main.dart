@@ -7,6 +7,8 @@ import 'package:PiliPlus/common/widgets/custom_toast.dart';
 import 'package:PiliPlus/common/widgets/route_aware_mixin.dart';
 import 'package:PiliPlus/common/widgets/scale_app.dart';
 import 'package:PiliPlus/common/widgets/scroll_behavior.dart';
+import 'package:PiliPlus/tv/tv_helper.dart';
+import 'package:PiliPlus/tv/tv_scroll.dart';
 import 'package:PiliPlus/http/init.dart';
 import 'package:PiliPlus/models/common/theme/theme_color_type.dart';
 import 'package:PiliPlus/plugin/pl_player/utils/fullscreen.dart';
@@ -289,6 +291,8 @@ class MyApp extends StatelessWidget {
       ],
       scrollBehavior: PlatformUtils.isDesktop
           ? const CustomScrollBehavior()
+          : TvHelper.isTV
+          ? TvScrollBehavior()
           : null,
     );
   }
@@ -320,12 +324,14 @@ class MyApp extends StatelessWidget {
       );
     }
     if (PlatformUtils.isDesktop) {
-      return BackDetector(
-        onBack: _onBack,
-        child: child,
+      return TvHelper.wrapWithDpad(
+        child: BackDetector(
+          onBack: _onBack,
+          child: child,
+        ),
       );
     }
-    return child;
+    return TvHelper.wrapWithDpad(child: child);
   }
 
   /// from [DynamicColorBuilderState.initPlatformState]

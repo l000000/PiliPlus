@@ -2,6 +2,7 @@ import 'package:PiliPlus/common/widgets/custom_icon.dart';
 import 'package:PiliPlus/http/pgc.dart';
 import 'package:PiliPlus/utils/accounts.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
@@ -83,7 +84,7 @@ class _PgcReviewPostPanelState extends State<PgcReviewPostPanel> {
         Center(
           child: Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 8),
-            child: GestureDetector(
+            child: TvTap(
               behavior: HitTestBehavior.opaque,
               onHorizontalDragUpdate: (details) =>
                   _onScore(details.localPosition.dx),
@@ -153,7 +154,7 @@ class _PgcReviewPostPanelState extends State<PgcReviewPostPanel> {
         if (!_isMod)
           Padding(
             padding: const EdgeInsets.only(left: 12, right: 12, bottom: 12),
-            child: GestureDetector(
+            child: TvTap(
               behavior: .opaque,
               onTap: _shareFeed.toggle,
               child: Obx(

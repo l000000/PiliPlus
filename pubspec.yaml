@@ -68,6 +68,7 @@ dependencies:
   connectivity_plus: ^7.1.1
   cookie_jar: ^4.0.8
   crypto: ^3.0.6
+  dpad: ^3.0.0
   desktop_webview_window:
     git:
       url: https://github.com/Predidit/linux_webview_window

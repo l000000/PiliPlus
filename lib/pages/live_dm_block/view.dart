@@ -14,6 +14,7 @@ import 'package:PiliPlus/utils/utils.dart';
 import 'package:collection/collection.dart';
 import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter/services.dart' show FilteringTextInputFormatter;
 import 'package:get/get.dart';
 
@@ -329,7 +330,7 @@ class _LiveDmBlockPageState extends State<LiveDmBlockPage> {
       );
     }
 
-    return GestureDetector(
+    return TvTap(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: Column(

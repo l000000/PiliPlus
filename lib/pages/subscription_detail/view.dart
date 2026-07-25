@@ -10,6 +10,7 @@ import 'package:PiliPlus/utils/grid.dart';
 import 'package:PiliPlus/utils/num_utils.dart';
 import 'package:PiliPlus/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:get/get.dart';
 
 class SubDetailPage extends StatefulWidget {
@@ -186,7 +187,7 @@ class _SubDetailPageState extends State<SubDetailPage> with GridMixin {
                         ),
                       ),
                     ),
-                    GestureDetector(
+                    TvTap(
                       onTap: () =>
                           Get.toNamed('/member?mid=${info.upper!.mid}'),
                       child: Text(

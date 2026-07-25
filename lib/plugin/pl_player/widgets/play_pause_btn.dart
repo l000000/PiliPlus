@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:PiliPlus/plugin/pl_player/controller.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:media_kit/media_kit.dart';
 
 class PlayOrPauseButton extends StatefulWidget {
@@ -52,7 +53,7 @@ class PlayOrPauseButtonState extends State<PlayOrPauseButton>
     return SizedBox(
       width: 42,
       height: 34,
-      child: GestureDetector(
+      child: TvTap(
         behavior: HitTestBehavior.opaque,
         onTap: widget.plPlayerController.onDoubleTapCenter,
         child: Center(

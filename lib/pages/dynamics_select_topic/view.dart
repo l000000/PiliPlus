@@ -11,6 +11,7 @@ import 'package:PiliPlus/pages/search/controller.dart' show DebounceStreamState;
 import 'package:PiliPlus/utils/extension/context_ext.dart';
 import 'package:PiliPlus/utils/extension/scroll_controller_ext.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:get/get.dart';
 
 class SelectTopicPanel extends StatefulWidget {
@@ -130,7 +131,7 @@ class _SelectTopicPanelState
                 () => _controller.enableClear.value
                     ? Padding(
                         padding: const EdgeInsets.only(right: 12),
-                        child: GestureDetector(
+                        child: TvTap(
                           child: Container(
                             padding: const EdgeInsetsDirectional.all(2),
                             decoration: BoxDecoration(

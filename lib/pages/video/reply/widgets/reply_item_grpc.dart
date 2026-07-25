@@ -54,6 +54,7 @@ import 'package:collection/collection.dart' show IterableExtension;
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:protobuf/protobuf.dart';
@@ -148,7 +149,7 @@ class ReplyItemGrpc extends StatelessWidget {
 
   Widget _buildHeader(BuildContext context, ColorScheme colorScheme) {
     final member = replyItem.member;
-    Widget header = GestureDetector(
+    Widget header = TvTap(
       onTap: () {
         feedBack();
         Get.toNamed('/member?mid=${replyItem.mid}');

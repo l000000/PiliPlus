@@ -45,6 +45,7 @@ import 'package:PiliPlus/utils/platform_utils.dart';
 import 'package:PiliPlus/utils/utils.dart';
 import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -130,7 +131,7 @@ class _MemberPageState extends State<MemberPage> {
                 SliverAppBar(
                   pinned: true,
                   actions: _actions(theme),
-                  title: GestureDetector(
+                  title: TvTap(
                     onTap: _userController.onReload,
                     behavior: HitTestBehavior.opaque,
                     child: Text(_userController.username ?? ''),

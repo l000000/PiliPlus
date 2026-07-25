@@ -27,6 +27,7 @@ import 'package:PiliPlus/utils/theme_utils.dart';
 import 'package:PiliPlus/utils/utils.dart';
 import 'package:PiliPlus/utils/waterfall.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -212,7 +213,7 @@ class _DynTopicPageState extends State<DynTopicPage>
                 height: kToolbarHeight,
                 alignment: Alignment.centerLeft,
                 margin: const EdgeInsets.only(left: 45, right: 78),
-                child: GestureDetector(
+                child: TvTap(
                   behavior: HitTestBehavior.opaque,
                   onTap: () => Get.toNamed(
                     '/member?mid=${response.topicCreator!.uid}',

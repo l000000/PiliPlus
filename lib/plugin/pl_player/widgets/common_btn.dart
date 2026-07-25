@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 
 class ComBtn extends StatelessWidget {
   final Widget icon;
@@ -25,7 +26,7 @@ class ComBtn extends StatelessWidget {
     final child = SizedBox(
       width: width,
       height: height,
-      child: GestureDetector(
+      child: TvTap(
         onTap: onTap,
         onLongPress: onLongPress,
         onSecondaryTap: onSecondaryTap,

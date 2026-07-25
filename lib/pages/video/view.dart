@@ -66,6 +66,7 @@ import 'package:PiliPlus/utils/theme_utils.dart';
 import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, clampDouble;
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter/services.dart' show SystemUiOverlayStyle;
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -717,7 +718,7 @@ class _VideoDetailPageVState extends State<VideoDetailPageV>
         }
         return Positioned.fill(
           bottom: -2,
-          child: GestureDetector(
+          child: TvTap(
             onTap: () {
               if (!videoDetailController.isFileSource) {
                 if (videoDetailController.isQuerying) {
@@ -1473,7 +1474,7 @@ class _VideoDetailPageVState extends State<VideoDetailPageV>
           if (!videoDetailController.autoPlay) {
             return Positioned.fill(
               bottom: -1,
-              child: GestureDetector(
+              child: TvTap(
                 onTap: handlePlay,
                 behavior: .opaque,
                 child: Obx(

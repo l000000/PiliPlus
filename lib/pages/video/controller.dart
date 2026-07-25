@@ -69,6 +69,7 @@ import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart'
     show ExtendedNestedScrollViewState;
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:flutter_volume_controller/flutter_volume_controller.dart';
 import 'package:get/get.dart';
@@ -556,7 +557,7 @@ class VideoDetailController extends GetxController
         ),
         child: Padding(
           padding: const EdgeInsets.only(top: 5),
-          child: GestureDetector(
+          child: TvTap(
             onHorizontalDragUpdate: (DragUpdateDetails details) {
               if (details.delta.dx < 0) {
                 onRemoveItem(listData.indexOf(item), item);

@@ -31,6 +31,7 @@ import 'package:PiliPlus/utils/share_utils.dart';
 import 'package:PiliPlus/utils/utils.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -373,7 +374,7 @@ class _MusicDetailPageState extends CommonDynPageState<MusicDetailPage> {
         ],
       );
     }
-    child = GestureDetector(
+    child = TvTap(
       onTap: artist.mid == null || artist.mid == 0
           ? () => Utils.copyText(artist.name!)
           : () => Get.toNamed(
@@ -438,7 +439,7 @@ class _MusicDetailPageState extends CommonDynPageState<MusicDetailPage> {
                 spacing: 10,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  GestureDetector(
+                  TvTap(
                     onTap: () => PageUtils.imageView(
                       imgList: [SourceModel(url: item.mvCover!)],
                     ),
@@ -457,7 +458,7 @@ class _MusicDetailPageState extends CommonDynPageState<MusicDetailPage> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        GestureDetector(
+                        TvTap(
                           onTap: () => _searchMusic(item),
                           onLongPress: () => Utils.copyText(item.musicTitle!),
                           behavior: HitTestBehavior.opaque,
@@ -497,7 +498,7 @@ class _MusicDetailPageState extends CommonDynPageState<MusicDetailPage> {
                                     fontSize: 11,
                                   ),
                             if (item.mvCid != 0)
-                              GestureDetector(
+                              TvTap(
                                 onTap: () => PageUtils.toVideoPage(
                                   bvid: item.mvBvid,
                                   cid: item.mvCid,

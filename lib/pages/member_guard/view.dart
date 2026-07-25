@@ -10,6 +10,7 @@ import 'package:PiliPlus/pages/member_guard/controller.dart';
 import 'package:PiliPlus/utils/extension/widget_ext.dart';
 import 'package:PiliPlus/utils/platform_utils.dart';
 import 'package:flutter/material.dart' hide ListTile;
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:get/get.dart';
 
 class MemberGuard extends StatefulWidget {
@@ -112,7 +113,7 @@ class _MemberGuardState extends State<MemberGuard> {
   }
 
   Widget _buildTopItem(GuardItem item, double size) {
-    final child = GestureDetector(
+    final child = TvTap(
       behavior: .opaque,
       onTap: () => Get.toNamed('/member?mid=${item.uid}'),
       child: Padding(

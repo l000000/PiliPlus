@@ -10,6 +10,7 @@ import 'package:PiliPlus/utils/extension/theme_ext.dart';
 import 'package:PiliPlus/utils/page_utils.dart';
 import 'package:PiliPlus/utils/platform_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 
 class DynamicPanel extends StatelessWidget {
   final DynamicItemModel item;
@@ -294,7 +295,7 @@ class DynamicPanel extends StatelessWidget {
       ),
     );
     if (moduleDispute.jumpUrl?.isNotEmpty == true) {
-      return GestureDetector(
+      return TvTap(
         onTap: () => PageUtils.handleWebview(moduleDispute.jumpUrl!),
         child: child,
       );

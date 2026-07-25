@@ -8,6 +8,7 @@ import 'package:PiliPlus/utils/extension/num_ext.dart';
 import 'package:PiliPlus/utils/image_utils.dart';
 import 'package:cached_network_image_ce/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:get/get.dart';
 
 class ArticleOpus extends StatelessWidget {
@@ -44,7 +45,7 @@ class ArticleOpus extends StatelessWidget {
                       ? null
                       : width * card.height! / card.width!;
                   width ??= maxWidth;
-                  return GestureDetector(
+                  return TvTap(
                     onTap: () {
                       switch (item.attributes?.clazz) {
                         case 'article-card card':

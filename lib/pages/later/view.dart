@@ -15,6 +15,7 @@ import 'package:PiliPlus/utils/extension/get_ext.dart';
 import 'package:PiliPlus/utils/extension/scroll_controller_ext.dart';
 import 'package:PiliPlus/utils/request_utils.dart';
 import 'package:flutter/material.dart' hide TabBarView;
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -86,7 +87,7 @@ class _LaterPageState extends State<LaterPage>
                             ? Offset.zero
                             : const Offset(0.75, 0),
                         duration: const Duration(milliseconds: 120),
-                        child: GestureDetector(
+                        child: TvTap(
                           onHorizontalDragDown: (details) =>
                               _baseCtr.dx = details.localPosition.dx,
                           onHorizontalDragStart: (details) =>

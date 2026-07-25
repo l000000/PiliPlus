@@ -25,6 +25,7 @@ import 'package:PiliPlus/utils/storage.dart';
 import 'package:PiliPlus/utils/update.dart';
 import 'package:PiliPlus/utils/utils.dart';
 import 'package:flutter/material.dart' hide ListTile;
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -99,7 +100,7 @@ class _AboutPageState extends State<AboutPage> {
           bottom: padding.bottom + 100,
         ),
         children: [
-          GestureDetector(
+          TvTap(
             onTap: () {
               if (++_pressCount == 5) {
                 _pressCount = 0;

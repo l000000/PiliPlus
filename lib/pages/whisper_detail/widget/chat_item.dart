@@ -25,6 +25,7 @@ import 'package:PiliPlus/utils/image_utils.dart';
 import 'package:PiliPlus/utils/page_utils.dart';
 import 'package:cached_network_image_ce/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
@@ -153,7 +154,7 @@ class ChatItem extends StatelessWidget {
             style: TextStyle(color: theme.colorScheme.outline),
           ),
         ),
-        GestureDetector(
+        TvTap(
           behavior: .opaque,
           onLongPress: onLongPress,
           onSecondaryTapUp: onSecondaryTapUp,
@@ -202,7 +203,7 @@ class ChatItem extends StatelessWidget {
 
   Widget msgTypeCommonShareCard_14(dynamic content, Color textColor) {
     if (content['source'] == '直播') {
-      return GestureDetector(
+      return TvTap(
         behavior: .opaque,
         onTap: () {
           dynamic roomId = content['sourceID'];
@@ -248,7 +249,7 @@ class ChatItem extends StatelessWidget {
   }
 
   Widget msgTypeArticleCard_12(dynamic content, Color textColor) {
-    return GestureDetector(
+    return TvTap(
       behavior: .opaque,
       onTap: () => Get.toNamed(
         '/articlePage',
@@ -322,7 +323,7 @@ class ChatItem extends StatelessWidget {
               ),
             ),
             for (final i in content['sub_cards'])
-              GestureDetector(
+              TvTap(
                 onTap: () async {
                   String? bvid = IdUtils.bvRegex
                       .firstMatch(i['jump_url'])
@@ -420,7 +421,7 @@ class ChatItem extends StatelessWidget {
         ),
         child: LayoutBuilder(
           builder: (_, constrains) {
-            return GestureDetector(
+            return TvTap(
               behavior: HitTestBehavior.opaque,
               onTap: () async {
                 try {
@@ -573,7 +574,7 @@ class ChatItem extends StatelessWidget {
           'unsupported source type: ${content['source']}',
         );
     }
-    return GestureDetector(
+    return TvTap(
       onTap: onTap,
       behavior: .opaque,
       child: Column(
@@ -641,7 +642,7 @@ class ChatItem extends StatelessWidget {
         child: child,
       );
     }
-    return GestureDetector(
+    return TvTap(
       onTap: () => PageUtils.imageView(imgList: [SourceModel(url: url)]),
       child: child,
     );
@@ -731,7 +732,7 @@ class ChatItem extends StatelessWidget {
         final String? text = content['jump_text$index'];
         return [
           Divider(color: theme.colorScheme.primary.withValues(alpha: 0.05)),
-          GestureDetector(
+          TvTap(
             behavior: HitTestBehavior.opaque,
             onTap: () => PiliScheme.routePushFromUrl(uri),
             child: Text(
@@ -806,7 +807,7 @@ class ChatItem extends StatelessWidget {
           ),
         );
         if (url != null && url.isNotEmpty) {
-          child = GestureDetector(
+          child = TvTap(
             onTap: () => PiliScheme.routePushFromUrl(url),
             child: child,
           );

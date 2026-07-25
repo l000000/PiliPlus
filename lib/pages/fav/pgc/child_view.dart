@@ -9,6 +9,7 @@ import 'package:PiliPlus/pages/fav/pgc/controller.dart';
 import 'package:PiliPlus/pages/fav/pgc/widget/item.dart';
 import 'package:PiliPlus/utils/grid.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:get/get.dart';
 
 class FavPgcChildPage extends StatefulWidget {
@@ -106,7 +107,7 @@ class _FavPgcChildPageState extends State<FavPgcChildPage>
                         },
                       ),
                     ),
-                    GestureDetector(
+                    TvTap(
                       behavior: HitTestBehavior.opaque,
                       onTap: () => _favPgcController.handleSelect(
                         checked: !_favPgcController.allSelected.value,
@@ -133,7 +134,7 @@ class _FavPgcChildPageState extends State<FavPgcChildPage>
                         .map(
                           (item) => Padding(
                             padding: const EdgeInsets.only(left: 25),
-                            child: GestureDetector(
+                            child: TvTap(
                               behavior: HitTestBehavior.opaque,
                               onTap: () {
                                 if (_favPgcController.checkedCount != 0) {

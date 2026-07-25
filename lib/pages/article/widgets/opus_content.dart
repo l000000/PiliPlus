@@ -23,6 +23,7 @@ import 'package:cached_network_image_ce/cached_network_image.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -237,7 +238,7 @@ class OpusContent extends StatelessWidget {
                   );
                 }
                 final images = this.images();
-                return GestureDetector(
+                return TvTap(
                   onTap: () => PageUtils.imageView(
                     imgList: images,
                     initialPage: images.indexWhere((e) => e.url == pic.url),
@@ -532,7 +533,7 @@ class OpusContent extends StatelessWidget {
                   final goods = element.linkCard!.card!.goods!;
                   child = Column(
                     children: goods.items!.map((e) {
-                      return GestureDetector(
+                      return TvTap(
                         onTap: () {
                           if (e.jumpUrl?.isNotEmpty == true) {
                             PiliScheme.routePushFromUrl(e.jumpUrl!);

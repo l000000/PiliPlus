@@ -34,6 +34,7 @@ import 'package:PiliPlus/utils/grid.dart';
 import 'package:PiliPlus/utils/request_utils.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart' hide showTimePicker;
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter/services.dart' show LengthLimitingTextInputFormatter;
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
@@ -600,7 +601,7 @@ class _CreateDynPanelState extends CommonRichTextPubPageState<CreateDynPanel> {
       required Icon icon,
       required String title,
     }) {
-      return GestureDetector(
+      return TvTap(
         onTap: onTap,
         child: Column(
           spacing: 5,
@@ -835,7 +836,7 @@ class _CreateDynPanelState extends CommonRichTextPubPageState<CreateDynPanel> {
         return Stack(
           clipBehavior: Clip.none,
           children: [
-            GestureDetector(
+            TvTap(
               onTap: _onReserve,
               behavior: HitTestBehavior.opaque,
               child: Container(

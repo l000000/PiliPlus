@@ -7,6 +7,7 @@ import 'package:PiliPlus/pages/whisper_link_setting/controller.dart';
 import 'package:PiliPlus/utils/extension/theme_ext.dart';
 import 'package:PiliPlus/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:get/get.dart';
 
 class WhisperLinkSettingPage extends StatefulWidget {
@@ -258,7 +259,7 @@ class _WhisperLinkSettingPageState extends State<WhisperLinkSettingPage> {
   }
 
   Widget _errWidget(String? errMsg, VoidCallback onTap) {
-    return GestureDetector(
+    return TvTap(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
       child: Container(

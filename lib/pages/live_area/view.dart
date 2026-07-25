@@ -12,6 +12,7 @@ import 'package:PiliPlus/pages/live_area_detail/view.dart';
 import 'package:PiliPlus/pages/search/widgets/search_text.dart';
 import 'package:PiliPlus/utils/extension/iterable_ext.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter_sortable_wrap/sortable_wrap.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -224,7 +225,7 @@ class _LiveAreaPageState extends State<LiveAreaPage> {
     required AreaItem item,
     required VoidCallback onPressed,
   }) {
-    return GestureDetector(
+    return TvTap(
       behavior: HitTestBehavior.opaque,
       onTap: () {
         if (_controller.isEditing.value) {

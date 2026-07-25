@@ -20,6 +20,7 @@ import 'package:PiliPlus/utils/platform_utils.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart' hide ListTile;
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
@@ -260,7 +261,7 @@ class WhisperSessionItem extends StatelessWidget {
               .resImage
               .imageSrc;
 
-          return GestureDetector(
+          return TvTap(
             onTap: item.sessionInfo.avatar.hasMid()
                 ? () =>
                       Get.toNamed('/member?mid=${item.sessionInfo.avatar.mid}')

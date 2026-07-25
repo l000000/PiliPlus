@@ -15,6 +15,7 @@ import 'package:PiliPlus/utils/app_scheme.dart';
 import 'package:PiliPlus/utils/date_utils.dart';
 import 'package:PiliPlus/utils/platform_utils.dart';
 import 'package:flutter/material.dart' hide ListTile;
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:get/get.dart';
 
 class AtMePage extends StatefulWidget {
@@ -111,7 +112,7 @@ class _AtMePageState extends State<AtMePage> {
                     },
                     onLongPress: onLongPress,
                     onSecondaryTap: PlatformUtils.isMobile ? null : onLongPress,
-                    leading: GestureDetector(
+                    leading: TvTap(
                       onTap: () => Get.toNamed('/member?mid=${item.user?.mid}'),
                       child: NetworkImgLayer(
                         width: 45,

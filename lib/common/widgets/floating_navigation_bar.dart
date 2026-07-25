@@ -4,6 +4,7 @@
 
 import 'package:PiliPlus/utils/extension/theme_ext.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 
 const double _kMaxLabelTextScaleFactor = 1.3;
 
@@ -285,7 +286,7 @@ class _NavigationDestinationBuilderState
   Widget build(BuildContext context) {
     final info = _NavigationDestinationInfo.of(context);
 
-    final child = GestureDetector(
+    final child = TvTap(
       behavior: .opaque,
       onTap: widget.enabled ? info.onTap : null,
       child: _NavigationBarDestinationLayout(

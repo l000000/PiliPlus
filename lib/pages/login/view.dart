@@ -13,6 +13,7 @@ import 'package:PiliPlus/utils/platform_utils.dart';
 import 'package:PiliPlus/utils/utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -133,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
         Obx(
           () {
             final url = _loginPageCtr.codeInfo.value.dataOrNull?.url ?? '';
-            return GestureDetector(
+            return TvTap(
               onTap: () => Utils.copyText(
                 url,
                 toastText: '已复制到剪贴板，可粘贴至已登录的app私信处发送，然后点击已发送的链接打开',

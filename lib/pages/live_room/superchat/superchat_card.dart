@@ -16,6 +16,7 @@ import 'package:PiliPlus/utils/utils.dart';
 import 'package:cached_network_image_ce/cached_network_image.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:get/get.dart';
 
 part 'package:PiliPlus/common/widgets/context_menu/live_menu_helper.dart';
@@ -203,7 +204,7 @@ class _SuperChatCardState extends State<SuperChatCard> {
       mainAxisSize: .min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        GestureDetector(
+        TvTap(
           onTapUp: showMenu,
           onSecondaryTapUp: PlatformUtils.isDesktop ? showMenu : null,
           child: Container(

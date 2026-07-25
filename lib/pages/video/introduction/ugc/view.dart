@@ -42,6 +42,7 @@ import 'package:PiliPlus/utils/platform_utils.dart';
 import 'package:PiliPlus/utils/request_utils.dart';
 import 'package:PiliPlus/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -104,7 +105,7 @@ class _UgcIntroPanelState extends State<UgcIntroPanel> {
           final videoDetail = introController.videoDetail.value;
           final isLoading = videoDetail.bvid == null;
           return SliverToBoxAdapter(
-            child: GestureDetector(
+            child: TvTap(
               onTap: () {
                 if (isLoading) return;
                 feedBack();
@@ -265,7 +266,7 @@ class _UgcIntroPanelState extends State<UgcIntroPanel> {
     VideoDetailData videoDetail, {
     bool isExpand = false,
   }) {
-    return GestureDetector(
+    return TvTap(
       onLongPress: () {
         Feedback.forLongPress(context);
         Utils.copyText(videoDetail.title ?? '');
@@ -276,7 +277,7 @@ class _UgcIntroPanelState extends State<UgcIntroPanel> {
 
   List<Widget> _infos(VideoDetailData videoDetail) => [
     const SizedBox(height: 8, width: .infinity),
-    GestureDetector(
+    TvTap(
       onTap: () => Utils.copyText('${videoDetail.bvid}'),
       child: Text(
         videoDetail.bvid ?? '',
@@ -767,7 +768,7 @@ class _UgcIntroPanelState extends State<UgcIntroPanel> {
     void onTap() => Get.toNamed(
       '/member?mid=${item.mid}&from_view_aid=${videoDetailCtr.aid}',
     );
-    return GestureDetector(
+    return TvTap(
       behavior: .opaque,
       onTap: () {
         if (item.mid == ownerMid &&
@@ -887,7 +888,7 @@ class _UgcIntroPanelState extends State<UgcIntroPanel> {
 
   Widget _buildAvatar(
     VoidCallback onPushMember,
-  ) => GestureDetector(
+  ) => TvTap(
     onTap: onPushMember,
     behavior: .opaque,
     onSecondaryTap:
@@ -979,7 +980,7 @@ class _UgcIntroPanelState extends State<UgcIntroPanel> {
   Widget get _aiBtn => Positioned(
     right: 8,
     child: Center(
-      child: GestureDetector(
+      child: TvTap(
         behavior: .opaque,
         onTap: () async {
           if (introController.aiConclusionResult == null) {

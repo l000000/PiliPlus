@@ -14,6 +14,7 @@ import 'package:PiliPlus/pages/popular_series/controller.dart';
 import 'package:PiliPlus/utils/grid.dart';
 import 'package:PiliPlus/utils/page_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:get/get.dart';
 
 class PopularSeriesPage extends StatefulWidget {
@@ -108,7 +109,7 @@ class _PopularSeriesPageState extends State<PopularSeriesPage> with GridMixin {
 
   Widget _buildSeriesList(PopularSeriesConfig config) {
     final colorScheme = ColorScheme.of(context);
-    Widget child = GestureDetector(
+    Widget child = TvTap(
       behavior: HitTestBehavior.opaque,
       onTap: () {
         final number = _controller.number;

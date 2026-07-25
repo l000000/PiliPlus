@@ -12,6 +12,7 @@ import 'package:PiliPlus/pages/pgc_index/widgets/pgc_card_v_pgc_index.dart';
 import 'package:PiliPlus/pages/search/widgets/search_text.dart';
 import 'package:PiliPlus/utils/grid.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:get/get.dart';
 
 class PgcIndexPage extends StatefulWidget {
@@ -196,7 +197,7 @@ class _PgcIndexPageState extends State<PgcIndexPage>
       ),
       if (count > 5) ...[
         const SizedBox(height: 8),
-        GestureDetector(
+        TvTap(
           behavior: .opaque,
           onTap: _ctr.isExpand.toggle,
           child: Center(

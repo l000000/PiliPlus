@@ -77,9 +77,9 @@ class PendantAvatar extends StatelessWidget {
       type: ImageType.avatar,
     );
     if (onTap != null) {
-      avatar = GestureDetector(
-        behavior: .opaque,
+      avatar = InkWell(
         onTap: onTap,
+        borderRadius: BorderRadius.circular(size / 2),
         child: avatar,
       );
     }
@@ -108,7 +108,8 @@ class PendantAvatar extends StatelessWidget {
     final fontSize = liveFontSize ?? 13.0;
     return Positioned(
       bottom: liveBottom ?? 0.0,
-      child: GestureDetector(
+      child: InkWell(
+        borderRadius: Style.mdRadius,
         onTap: () => PageUtils.toLiveRoom(roomId),
         child: Container(
           padding: const .symmetric(horizontal: 5, vertical: 1),

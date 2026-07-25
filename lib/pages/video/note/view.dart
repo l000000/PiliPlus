@@ -13,6 +13,7 @@ import 'package:PiliPlus/utils/bili_utils.dart';
 import 'package:PiliPlus/utils/extension/theme_ext.dart';
 import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
@@ -229,7 +230,7 @@ class _NoteListPageState extends State<NoteListPage>
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              GestureDetector(
+              TvTap(
                 onTap: () => Get.toNamed('/member?mid=${item.author!.mid}'),
                 child: NetworkImgLayer(
                   height: 34,
@@ -244,7 +245,7 @@ class _NoteListPageState extends State<NoteListPage>
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    GestureDetector(
+                    TvTap(
                       onTap: () =>
                           Get.toNamed('/member?mid=${item.author!.mid}'),
                       child: Row(

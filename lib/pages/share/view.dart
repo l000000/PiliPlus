@@ -6,6 +6,7 @@ import 'package:PiliPlus/pages/contact/view.dart';
 import 'package:PiliPlus/utils/extension/scroll_controller_ext.dart';
 import 'package:PiliPlus/utils/request_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter/services.dart' show LengthLimitingTextInputFormatter;
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
@@ -112,7 +113,7 @@ class _SharePanelState extends State<SharePanel> {
                     final item = _userList[index];
                     return Builder(
                       builder: (context) {
-                        return GestureDetector(
+                        return TvTap(
                           onTap: () {
                             item.selected = !item.selected;
                             (context as Element).markNeedsBuild();
@@ -174,7 +175,7 @@ class _SharePanelState extends State<SharePanel> {
                   },
                 ),
               ),
-              GestureDetector(
+              TvTap(
                 onTap: () async {
                   _focusNode.unfocus();
                   final UserModel? userModel = await Navigator.of(context).push(

@@ -14,6 +14,7 @@ import 'package:PiliPlus/pages/history/widgets/item.dart';
 import 'package:PiliPlus/utils/extension/scroll_controller_ext.dart';
 import 'package:PiliPlus/utils/grid.dart';
 import 'package:flutter/material.dart' hide TabBarView;
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:get/get.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -267,7 +268,7 @@ class _HistoryPageState extends State<HistoryPage>
                   ),
                 ),
               ),
-              GestureDetector(
+              TvTap(
                 behavior: HitTestBehavior.opaque,
                 onTap: () => _historyController.baseCtr.onPauseHistory(context),
                 child: Padding(

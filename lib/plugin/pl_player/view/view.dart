@@ -71,6 +71,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter/rendering.dart'
     show RenderProxyBox, SemanticsConfiguration;
 import 'package:flutter/services.dart';
@@ -1597,7 +1598,7 @@ class _PLVideoPlayerState extends State<PLVideoPlayer>
                     isFullScreen: isFullScreen,
                     removeSafeArea: plPlayerController.removeSafeArea,
                     child: plPlayerController.isDesktopPip
-                        ? GestureDetector(
+                        ? TvTap(
                             behavior: HitTestBehavior.translucent,
                             onPanStart: (_) => windowManager.startDragging(),
                             child: widget.headerControl,
@@ -1878,7 +1879,7 @@ class _PLVideoPlayerState extends State<PLVideoPlayer>
               (plPlayerController.isBuffering.value &&
                   plPlayerController.playerStatus.isPlaying)) {
             return Center(
-              child: GestureDetector(
+              child: TvTap(
                 onTap: plPlayerController.refreshPlayer,
                 child: Container(
                   padding: const EdgeInsets.all(20),
@@ -2216,7 +2217,7 @@ class _PLVideoPlayerState extends State<PLVideoPlayer>
     Widget child, {
     required Future<void>? Function() onTap,
   }) {
-    return GestureDetector(
+    return TvTap(
       behavior: HitTestBehavior.opaque,
       onTap: () async {
         await onTap();

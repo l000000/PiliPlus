@@ -15,6 +15,7 @@ import 'package:PiliPlus/utils/platform_utils.dart';
 import 'package:PiliPlus/utils/request_utils.dart';
 import 'package:PiliPlus/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter/services.dart' show LengthLimitingTextInputFormatter;
 import 'package:get/get.dart';
 
@@ -139,7 +140,7 @@ class _FollowPageState extends State<FollowPage> {
                   final item = _followController.tabs[index];
                   int? count = item.count;
                   if (BiliUtils.isCustomFollowTag(item.tagid)) {
-                    return GestureDetector(
+                    return TvTap(
                       behavior: HitTestBehavior.translucent,
                       onLongPress: () {
                         Feedback.forLongPress(context);

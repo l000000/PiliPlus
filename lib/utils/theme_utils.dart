@@ -1,4 +1,5 @@
 import 'package:PiliPlus/common/style.dart';
+import 'package:PiliPlus/tv/tv_theme.dart';
 import 'package:PiliPlus/utils/extension/theme_ext.dart';
 import 'package:PiliPlus/utils/storage_pref.dart';
 import 'package:flutter/cupertino.dart' show CupertinoThemeData;
@@ -155,7 +156,7 @@ abstract final class ThemeUtils {
         themeData = darkenTheme(themeData);
       }
     }
-    return themeData;
+    return themeData.applyTvTheme();
   }
 
   static ThemeData darkenTheme(ThemeData themeData) {

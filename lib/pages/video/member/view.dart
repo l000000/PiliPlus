@@ -26,6 +26,7 @@ import 'package:PiliPlus/utils/page_utils.dart';
 import 'package:PiliPlus/utils/request_utils.dart';
 import 'package:PiliPlus/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
@@ -240,7 +241,7 @@ class _HorizontalMemberPageState extends State<HorizontalMemberPage> {
     children: [
       Row(
         children: [
-          GestureDetector(
+          TvTap(
             onTap: () => Utils.copyText(memberInfoModel.name ?? ''),
             child: Text(
               memberInfoModel.name ?? '',
@@ -386,7 +387,7 @@ class _HorizontalMemberPageState extends State<HorizontalMemberPage> {
             ? NumUtils.numFormat(userStat['likes'])
             : '';
     }
-    return GestureDetector(
+    return TvTap(
       onTap: onTap,
       child: Text(
         '$num${type.title}',
@@ -398,7 +399,7 @@ class _HorizontalMemberPageState extends State<HorizontalMemberPage> {
     );
   }
 
-  Widget _buildAvatar(String face) => GestureDetector(
+  Widget _buildAvatar(String face) => TvTap(
     onTap: () => PageUtils.imageView(
       imgList: [SourceModel(url: face)],
     ),

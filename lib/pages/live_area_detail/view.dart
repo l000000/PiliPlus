@@ -9,6 +9,7 @@ import 'package:PiliPlus/pages/live_area_detail/child/view.dart';
 import 'package:PiliPlus/pages/live_area_detail/controller.dart';
 import 'package:PiliPlus/pages/live_search/view.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -158,7 +159,7 @@ class _LiveAreaDetailPageState extends State<LiveAreaDetailPage> {
     required AreaItem item,
     required VoidCallback onTap,
   }) {
-    return GestureDetector(
+    return TvTap(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
       child: Column(

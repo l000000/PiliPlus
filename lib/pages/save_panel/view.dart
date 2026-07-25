@@ -23,6 +23,7 @@ import 'package:PiliPlus/utils/share_utils.dart';
 import 'package:PiliPlus/utils/utils.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
@@ -484,7 +485,7 @@ class _SavePanelState extends State<SavePanel> {
                                             ],
                                           ),
                                         ),
-                                        GestureDetector(
+                                        TvTap(
                                           onTap: () => Utils.copyText(uri),
                                           child: Container(
                                             width: 88,

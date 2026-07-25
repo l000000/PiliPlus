@@ -34,8 +34,9 @@ void imageSaveDialog({
             Stack(
               clipBehavior: Clip.none,
               children: [
-                GestureDetector(
+                InkWell(
                   onTap: SmartDialog.dismiss,
+                  borderRadius: const .vertical(top: Style.imgRadius),
                   child: NetworkImgLayer(
                     src: cover,
                     quality: 100,

@@ -19,6 +19,7 @@ import 'package:PiliPlus/utils/extension/get_ext.dart';
 import 'package:PiliPlus/utils/num_utils.dart';
 import 'package:PiliPlus/utils/page_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
@@ -142,7 +143,7 @@ class _PgcIntroPageState extends State<PgcIntroPage> {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        GestureDetector(
+        TvTap(
           onTap: () => PageUtils.imageView(
             imgList: [SourceModel(url: item.cover!)],
           ),
@@ -283,7 +284,7 @@ class _PgcIntroPageState extends State<PgcIntroPage> {
           if (isLandscape) ...desc(),
         ],
       );
-      return GestureDetector(
+      return TvTap(
         onTap: () => widget.showIntroDetail(
           item,
           introController.videoTags.value,
@@ -313,7 +314,7 @@ class _PgcIntroPageState extends State<PgcIntroPage> {
 
     // pugv
     Widget upInfo(int mid, String avatar, String name, {String? role}) =>
-        GestureDetector(
+        TvTap(
           behavior: HitTestBehavior.opaque,
           onTap: () => Get.toNamed('/member?mid=$mid'),
           child: Row(

@@ -8,6 +8,7 @@ import 'package:PiliPlus/pages/rcmd/controller.dart';
 import 'package:PiliPlus/utils/grid.dart';
 import 'package:PiliPlus/utils/storage_pref.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:get/get.dart';
 
 class RcmdPage extends StatefulWidget {
@@ -74,7 +75,7 @@ class _RcmdPageState extends State<RcmdPage>
                   }
                   if (controller.lastRefreshAt != null) {
                     if (controller.lastRefreshAt == index) {
-                      return GestureDetector(
+                      return TvTap(
                         onTap: () => controller
                           ..animateToTop()
                           ..onRefresh(),

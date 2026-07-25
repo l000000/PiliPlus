@@ -9,6 +9,7 @@ import 'package:PiliPlus/pages/search_panel/user/view.dart';
 import 'package:PiliPlus/pages/search_panel/video/view.dart';
 import 'package:PiliPlus/pages/search_result/controller.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:get/get.dart';
 
 class SearchResultPage extends StatefulWidget {
@@ -74,7 +75,7 @@ class _SearchResultPageState extends State<SearchResultPage>
             width: 1,
           ),
         ),
-        title: GestureDetector(
+        title: TvTap(
           onTap: () {
             if (_isFromSearch) {
               Get.back();

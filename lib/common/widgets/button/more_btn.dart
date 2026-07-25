@@ -26,8 +26,7 @@ Widget moreTextButton({
   if (padding != null) {
     child = Padding(padding: padding, child: child);
   }
-  return GestureDetector(
-    behavior: HitTestBehavior.opaque,
+  return InkWell(
     onTap: onTap,
     child: child,
   );

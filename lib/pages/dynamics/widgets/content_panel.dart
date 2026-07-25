@@ -13,6 +13,7 @@ import 'package:PiliPlus/utils/extension/selectable_region_ext.dart';
 import 'package:PiliPlus/utils/page_utils.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:get/get.dart';
 
 part 'package:PiliPlus/common/widgets/context_menu/dyn_menu_helper.dart';
@@ -42,7 +43,7 @@ Widget content(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (moduleDynamic?.topic case final topic?)
-          GestureDetector(
+          TvTap(
             onTap: () => Get.toNamed(
               '/dynTopic',
               parameters: {

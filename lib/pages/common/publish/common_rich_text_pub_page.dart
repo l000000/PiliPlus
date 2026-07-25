@@ -30,6 +30,7 @@ import 'package:dio/dio.dart' show CancelToken;
 import 'package:easy_debounce/easy_throttle.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
@@ -112,7 +113,7 @@ abstract class CommonRichTextPubPageState<T extends CommonRichTextPubPage>
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        GestureDetector(
+        TvTap(
           onTap: () => PageUtils.imageView(
             imgList: imageList
                 .map(

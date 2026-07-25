@@ -22,6 +22,7 @@ import 'package:PiliPlus/pages/pgc_index/widgets/pgc_card_v_pgc_index.dart';
 import 'package:PiliPlus/utils/extension/iterable_ext.dart';
 import 'package:PiliPlus/utils/grid.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:get/get.dart';
 
 class PgcPage extends StatefulWidget {
@@ -190,7 +191,7 @@ class _PgcPageState extends State<PgcPage> with AutomaticKeepAliveClientMixin {
               },
             )
           : const SizedBox.shrink(),
-    Error(:final errMsg) => GestureDetector(
+    Error(:final errMsg) => TvTap(
       behavior: HitTestBehavior.opaque,
       onTap: controller.queryPgcTimeline,
       child: Container(

@@ -7,6 +7,7 @@ import 'package:PiliPlus/utils/page_utils.dart';
 import 'package:cached_network_image_ce/cached_network_image.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:html/dom.dart' as dom;
 
@@ -51,7 +52,7 @@ Widget htmlRender({
             );
           }
           final width = isEmote ? 22.0 : maxWidth;
-          return GestureDetector(
+          return TvTap(
             onTap: () => PageUtils.imageView(
               imgList: [SourceModel(url: imgUrl)],
               quality: 60,

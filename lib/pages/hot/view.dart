@@ -12,6 +12,7 @@ import 'package:PiliPlus/pages/rank/view.dart';
 import 'package:PiliPlus/utils/grid.dart';
 import 'package:PiliPlus/utils/storage_pref.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:get/get.dart';
 
 class HotPage extends StatefulWidget {
@@ -33,7 +34,7 @@ class _HotPageState extends State<HotPage>
     required String title,
     required VoidCallback onTap,
   }) {
-    return GestureDetector(
+    return TvTap(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: Column(

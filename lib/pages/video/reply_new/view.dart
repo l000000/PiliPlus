@@ -30,6 +30,7 @@ import 'package:PiliPlus/utils/storage_pref.dart';
 import 'package:PiliPlus/utils/theme_utils.dart';
 import 'package:PiliPlus/utils/utils.dart';
 import 'package:flutter/material.dart' hide TextField;
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
@@ -243,7 +244,7 @@ class _ReplyPageState extends CommonRichTextPubPageState<ReplyPage> {
       required Icon icon,
       required String title,
     }) {
-      return GestureDetector(
+      return TvTap(
         onTap: onTap,
         behavior: HitTestBehavior.opaque,
         child: Column(

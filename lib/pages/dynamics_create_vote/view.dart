@@ -11,6 +11,7 @@ import 'package:PiliPlus/utils/platform_utils.dart';
 import 'package:PiliPlus/utils/utils.dart';
 import 'package:easy_debounce/easy_throttle.dart';
 import 'package:flutter/material.dart' hide showTimePicker;
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
@@ -218,7 +219,7 @@ class _CreateVotePageState extends State<CreateVotePage> {
                 width: 100,
                 child: Text('投票截止时间', style: _leadingStyle),
               ),
-              GestureDetector(
+              TvTap(
                 behavior: HitTestBehavior.opaque,
                 onTap: () async {
                   FocusManager.instance.primaryFocus?.unfocus();
@@ -322,7 +323,7 @@ class _CreateVotePageState extends State<CreateVotePage> {
           ),
         ),
         if (showImg)
-          GestureDetector(
+          TvTap(
             onTap: onPickImg,
             child: NetworkImgLayer(
               src: imgUrl,

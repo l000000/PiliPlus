@@ -14,6 +14,7 @@ import 'package:PiliPlus/plugin/pl_player/controller.dart';
 import 'package:PiliPlus/utils/storage_pref.dart';
 import 'package:canvas_danmaku/models/danmaku_content_item.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter/services.dart' show LengthLimitingTextInputFormatter;
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
@@ -106,7 +107,7 @@ class _SendDanmakuPanelState extends CommonTextPubPageState<SendDanmakuPanel> {
           itemCount: length,
           itemBuilder: (context, index) {
             if (index == length - 1) {
-              return GestureDetector(
+              return TvTap(
                 onTap: _showColorPicker,
                 child: Container(
                   decoration: BoxDecoration(
@@ -235,7 +236,7 @@ class _SendDanmakuPanelState extends CommonTextPubPageState<SendDanmakuPanel> {
   );
 
   Widget _buildColorItem(Color color) {
-    return GestureDetector(
+    return TvTap(
       onTap: () => _color.value = color,
       child: Container(
         padding: const EdgeInsets.all(2),
@@ -287,7 +288,7 @@ class _SendDanmakuPanelState extends CommonTextPubPageState<SendDanmakuPanel> {
   Widget _buildPositionItem(int mode, String title) {
     return Obx(
       () => Expanded(
-        child: GestureDetector(
+        child: TvTap(
           onTap: () => _mode.value = mode,
           child: Container(
             alignment: Alignment.center,
@@ -315,7 +316,7 @@ class _SendDanmakuPanelState extends CommonTextPubPageState<SendDanmakuPanel> {
   Widget _buildFontSizeItem(int fontSize, String title) {
     return Obx(
       () => Expanded(
-        child: GestureDetector(
+        child: TvTap(
           onTap: () => _fontSize.value = fontSize,
           child: Container(
             alignment: Alignment.center,

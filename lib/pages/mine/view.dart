@@ -22,6 +22,7 @@ import 'package:PiliPlus/utils/platform_utils.dart';
 import 'package:PiliPlus/utils/storage.dart';
 import 'package:PiliPlus/utils/utils.dart';
 import 'package:flutter/material.dart' hide ListTile;
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -247,7 +248,7 @@ class _MediaPageState extends CommonPageState<MinePage>
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          GestureDetector(
+          TvTap(
             behavior: .opaque,
             onTap: controller.onLogin,
             onLongPress: () {

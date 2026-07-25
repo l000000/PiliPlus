@@ -14,6 +14,7 @@ import 'package:PiliPlus/pages/emote/view.dart';
 import 'package:PiliPlus/utils/accounts.dart';
 import 'package:PiliPlus/utils/request_utils.dart';
 import 'package:flutter/material.dart' hide TextField;
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
@@ -206,7 +207,7 @@ class _RepostPanelState extends CommonRichTextPubPageState<RepostPanel> {
     ),
   );
 
-  Widget _buildEditPlaceHolder(ThemeData theme) => GestureDetector(
+  Widget _buildEditPlaceHolder(ThemeData theme) => TvTap(
     behavior: HitTestBehavior.opaque,
     onTap: () {
       setState(() => _isMax = true);

@@ -20,6 +20,7 @@ import 'package:PiliPlus/utils/request_utils.dart';
 import 'package:PiliPlus/utils/share_utils.dart';
 import 'package:PiliPlus/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
@@ -74,7 +75,7 @@ class _FavDetailPageState extends State<FavDetailPage> with GridMixin {
                             ? Offset.zero
                             : const Offset(0.75, 0),
                         duration: const Duration(milliseconds: 120),
-                        child: GestureDetector(
+                        child: TvTap(
                           onHorizontalDragDown: (details) =>
                               _favDetailController.dx =
                                   details.localPosition.dx,
@@ -431,7 +432,7 @@ class _FavDetailPageState extends State<FavDetailPage> with GridMixin {
                               ),
                             ),
                           ),
-                          GestureDetector(
+                          TvTap(
                             onTap: () => Get.toNamed(
                               '/member?mid=${folderInfo.upper!.mid}',
                             ),

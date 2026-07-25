@@ -20,6 +20,7 @@ import 'package:PiliPlus/utils/page_utils.dart';
 import 'package:PiliPlus/utils/platform_utils.dart';
 import 'package:PiliPlus/utils/theme_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -324,7 +325,7 @@ class _LivePageState extends State<LivePage>
                 if (index == listLength) {
                   return Align(
                     alignment: const Alignment(0, -0.3),
-                    child: GestureDetector(
+                    child: TvTap(
                       onTap: () => Get.to(const LiveFollowPage()),
                       child: Container(
                         width: 40,
@@ -346,7 +347,7 @@ class _LivePageState extends State<LivePage>
                   padding: const .only(right: 5),
                   child: SizedBox(
                     width: 65,
-                    child: GestureDetector(
+                    child: TvTap(
                       behavior: HitTestBehavior.opaque,
                       onTap: () => PageUtils.toLiveRoom(item.roomid),
                       onLongPress: () {

@@ -53,6 +53,7 @@ import 'package:canvas_danmaku/canvas_danmaku.dart';
 import 'package:easy_debounce/easy_throttle.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter/services.dart' show HapticFeedback, DeviceOrientation;
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:flutter_volume_controller/flutter_volume_controller.dart';
@@ -1674,7 +1675,7 @@ class PlPlayerController with BlockConfigMixin {
       SmartDialog.showToast('点击弹窗保存截图');
       showDialog(
         context: Get.context!,
-        builder: (context) => GestureDetector(
+        builder: (context) => TvTap(
           onTap: () async {
             final bytes = await image.toByteData(format: .png);
             if (bytes != null) {

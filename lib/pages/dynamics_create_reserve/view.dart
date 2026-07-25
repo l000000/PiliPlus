@@ -3,6 +3,7 @@ import 'package:PiliPlus/pages/dynamics_create_reserve/controller.dart';
 import 'package:PiliPlus/utils/date_utils.dart';
 import 'package:PiliPlus/utils/utils.dart';
 import 'package:flutter/material.dart' hide showTimePicker;
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter/services.dart'
     show TextInputFormatter, LengthLimitingTextInputFormatter;
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -96,7 +97,7 @@ class _CreateReservePageState extends State<CreateReservePage> {
                 child: Text('时间', style: _leadingStyle),
               ),
               Expanded(
-                child: GestureDetector(
+                child: TvTap(
                   behavior: HitTestBehavior.opaque,
                   onTap: () async {
                     FocusManager.instance.primaryFocus?.unfocus();

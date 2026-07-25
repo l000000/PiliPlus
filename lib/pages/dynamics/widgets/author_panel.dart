@@ -28,6 +28,7 @@ import 'package:PiliPlus/utils/share_utils.dart';
 import 'package:cached_network_image_ce/cached_network_image.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
@@ -125,7 +126,7 @@ class AuthorPanel extends StatelessWidget {
     ];
     Widget header;
     if (moduleAuthor.type == 'AUTHOR_TYPE_NORMAL') {
-      header = GestureDetector(
+      header = TvTap(
         onTap: () => {
           feedBack(),
           Get.toNamed('/member?mid=${moduleAuthor.mid}'),

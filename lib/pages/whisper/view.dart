@@ -9,6 +9,7 @@ import 'package:PiliPlus/utils/extension/theme_ext.dart';
 import 'package:PiliPlus/utils/extension/three_dot_ext.dart';
 import 'package:PiliPlus/utils/theme_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
@@ -157,7 +158,7 @@ class _WhisperPageState extends State<WhisperPage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: List.generate(_controller.msgFeedTopItems.length, (index) {
             final item = _controller.msgFeedTopItems[index];
-            return GestureDetector(
+            return TvTap(
               behavior: HitTestBehavior.opaque,
               child: Padding(
                 padding: const EdgeInsets.all(10),

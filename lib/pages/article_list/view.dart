@@ -13,6 +13,7 @@ import 'package:PiliPlus/utils/grid.dart';
 import 'package:PiliPlus/utils/num_utils.dart';
 import 'package:PiliPlus/utils/page_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:get/get.dart';
 
 class ArticleListPage extends StatefulWidget {
@@ -137,7 +138,7 @@ class _ArticleListPageState extends State<ArticleListPage> with GridMixin {
                   ),
                   if (_controller.author != null) ...[
                     const SizedBox(height: 10),
-                    GestureDetector(
+                    TvTap(
                       behavior: HitTestBehavior.opaque,
                       onTap: () =>
                           Get.toNamed('/member?mid=${_controller.author!.mid}'),

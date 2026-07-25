@@ -5,6 +5,7 @@ import 'package:PiliPlus/pages/video/controller.dart';
 import 'package:PiliPlus/utils/duration_utils.dart';
 import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:get/get.dart';
 
 class AiConclusionPanel extends CommonSlidePage {
@@ -141,7 +142,7 @@ class _AiDetailState extends State<AiConclusionPanel>
       color: theme.colorScheme.surface,
       child: Column(
         children: [
-          GestureDetector(
+          TvTap(
             onTap: Get.back,
             child: SizedBox(
               height: 35,

@@ -14,6 +14,7 @@ import 'package:PiliPlus/utils/extension/theme_ext.dart';
 import 'package:PiliPlus/utils/utils.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
@@ -175,7 +176,7 @@ class LiveRoomChatPanel extends StatelessWidget {
               return AnimatedOpacity(
                 opacity: isEmpty ? 0 : 1,
                 duration: const Duration(milliseconds: 120),
-                child: GestureDetector(
+                child: TvTap(
                   onTap: isEmpty
                       ? null
                       : () => liveRoomController.pageController?.animateToPage(

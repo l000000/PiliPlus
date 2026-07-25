@@ -13,6 +13,7 @@ import 'package:PiliPlus/utils/storage.dart';
 import 'package:PiliPlus/utils/storage_key.dart';
 import 'package:PiliPlus/utils/storage_pref.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:get/get.dart';
 
 typedef OnPayCoin = Function(int coin, bool coinWithLike);
@@ -241,7 +242,7 @@ class _PayCoinsPageState extends State<PayCoinsPage>
     final index = _pageIndex.value;
     final canPay = _canPay(index);
     final payImg = _getPayImage(index, canPay);
-    return GestureDetector(
+    return TvTap(
       onTap: canPay ? _onPayCoin : null,
       onVerticalDragStart: canPay
           ? (e) {
@@ -346,7 +347,7 @@ class _PayCoinsPageState extends State<PayCoinsPage>
                           if (_isPaying) {
                             return const SizedBox.shrink();
                           }
-                          return GestureDetector(
+                          return TvTap(
                             onTap: index == 0 ? null : () => _onScroll(0),
                             behavior: HitTestBehavior.opaque,
                             child: Padding(
@@ -369,7 +370,7 @@ class _PayCoinsPageState extends State<PayCoinsPage>
                         if (_isPaying) {
                           return const SizedBox.shrink();
                         }
-                        return GestureDetector(
+                        return TvTap(
                           behavior: HitTestBehavior.opaque,
                           onTap: index == 1 ? null : () => _onScroll(1),
                           child: Padding(
@@ -395,7 +396,7 @@ class _PayCoinsPageState extends State<PayCoinsPage>
               else
                 const SizedBox(height: 10),
               if (_hasCopyright)
-                GestureDetector(
+                TvTap(
                   behavior: HitTestBehavior.opaque,
                   onHorizontalDragStart: (e) {
                     _isHorizontal = true;
@@ -422,7 +423,7 @@ class _PayCoinsPageState extends State<PayCoinsPage>
                 clipBehavior: Clip.none,
                 alignment: Alignment.centerLeft,
                 children: [
-                  GestureDetector(
+                  TvTap(
                     onTap: () {
                       final newVal = !_coinWithLike.value;
                       _coinWithLike.value = newVal;
@@ -450,7 +451,7 @@ class _PayCoinsPageState extends State<PayCoinsPage>
                     ),
                   ),
                   Center(
-                    child: GestureDetector(
+                    child: TvTap(
                       onTap: Get.back,
                       behavior: HitTestBehavior.opaque,
                       child: SizedBox(

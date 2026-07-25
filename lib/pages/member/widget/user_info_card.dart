@@ -40,6 +40,7 @@ import 'package:PiliPlus/utils/utils.dart';
 import 'package:cached_network_image_ce/cached_network_image.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
@@ -115,7 +116,7 @@ class UserInfoCard extends StatelessWidget {
       '${type.title}: $count',
       alignment: const Alignment(0.0, -0.8),
     );
-    return GestureDetector(
+    return TvTap(
       behavior: .opaque,
       onTap: onTap,
       onLongPress: PlatformUtils.isMobile ? onShowCount : null,
@@ -177,7 +178,7 @@ class UserInfoCard extends StatelessWidget {
         }
       }
       try {
-        liveMedal = GestureDetector(
+        liveMedal = TvTap(
           onTap: showLiveMedalWall,
           child: MedalWidget(
             medalName: detailV2.medalName!,
@@ -199,7 +200,7 @@ class UserInfoCard extends StatelessWidget {
         runSpacing: 8,
         crossAxisAlignment: .center,
         children: [
-          GestureDetector(
+          TvTap(
             onTap: () => Utils.copyText(card.name!),
             child: Text(
               card.name!,
@@ -327,7 +328,7 @@ class UserInfoCard extends StatelessWidget {
         runSpacing: 8,
         crossAxisAlignment: .center,
         children: [
-          GestureDetector(
+          TvTap(
             onTap: () => Utils.copyText(card.mid.toString()),
             child: Text(
               'UID: ${card.mid}',
@@ -345,7 +346,7 @@ class UserInfoCard extends StatelessWidget {
                 ),
               );
               if (hasUri) {
-                return GestureDetector(
+                return TvTap(
                   onTap: () => PiliScheme.routePushFromUrl(item.uri!),
                   child: child,
                 );
@@ -619,7 +620,7 @@ class UserInfoCard extends StatelessWidget {
     }
     final controller = headerControllerBuilder();
     final memCacheWidth = width.cacheSize(context);
-    return GestureDetector(
+    return TvTap(
       behavior: .opaque,
       onTap: () => PageUtils.imageView(
         initialPage: controller.page?.round() ?? 0,
@@ -690,7 +691,7 @@ class UserInfoCard extends StatelessWidget {
     Alignment alignment = .center,
   }) {
     final img = fullCover ?? imgUrl;
-    return GestureDetector(
+    return TvTap(
       behavior: .opaque,
       onTap: () => PageUtils.imageView(imgList: [SourceModel(url: img)]),
       child: fromHero(
@@ -772,7 +773,7 @@ class UserInfoCard extends StatelessWidget {
       ),
     );
     if (prInfo.url?.isNotEmpty ?? false) {
-      return GestureDetector(
+      return TvTap(
         onTap: () => PageUtils.handleWebview(prInfo.url!),
         child: child,
       );
@@ -826,7 +827,7 @@ class UserInfoCard extends StatelessWidget {
     String desc,
     VoidCallback onTap,
   ) {
-    return GestureDetector(
+    return TvTap(
       onTap: onTap,
       child: Row(
         mainAxisSize: .min,
@@ -952,7 +953,7 @@ class UserInfoCard extends StatelessWidget {
         ],
       ),
     );
-    return GestureDetector(
+    return TvTap(
       onTap: () => FollowedPage.toFollowedPage(mid: card.mid, name: card.name),
       child: child,
     );

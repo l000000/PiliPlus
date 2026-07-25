@@ -6,6 +6,7 @@ import 'package:PiliPlus/utils/date_utils.dart';
 import 'package:PiliPlus/utils/page_utils.dart';
 import 'package:PiliPlus/utils/platform_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:get/get.dart';
 
 Widget forwardPanel(
@@ -110,7 +111,7 @@ Widget _forwardAuthor({
   final isNormalAuth = moduleAuthor.type == 'AUTHOR_TYPE_NORMAL';
   return Row(
     children: [
-      GestureDetector(
+      TvTap(
         onTap: isNormalAuth
             ? () => Get.toNamed('/member?mid=${moduleAuthor.mid}')
             : null,

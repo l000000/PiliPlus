@@ -28,6 +28,7 @@ import 'package:PiliPlus/utils/share_utils.dart';
 import 'package:PiliPlus/utils/utils.dart';
 import 'package:cached_network_image_ce/cached_network_image.dart';
 import 'package:flutter/material.dart' hide PageView;
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -522,7 +523,7 @@ class _ArticlePageState extends CommonDynPageState<ArticlePage> {
                   );
                 }
               }
-              return GestureDetector(
+              return TvTap(
                 behavior: .opaque,
                 onTap: () => PageUtils.imageView(
                   quality: 60,
@@ -578,7 +579,7 @@ class _ArticlePageState extends CommonDynPageState<ArticlePage> {
         controller.articleData?.publishTime;
     return Padding(
       padding: const .symmetric(vertical: 10),
-      child: GestureDetector(
+      child: TvTap(
         onTap: () => Get.toNamed(
           '/member?mid=${controller.summary.author?.mid}',
         ),

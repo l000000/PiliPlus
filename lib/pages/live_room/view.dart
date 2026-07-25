@@ -54,6 +54,7 @@ import 'package:cached_network_image_ce/cached_network_image.dart';
 import 'package:canvas_danmaku/danmaku_screen.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart' hide PageView;
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:screen_brightness_platform_interface/screen_brightness_platform_interface.dart';
@@ -508,7 +509,7 @@ class _LiveRoomPageState extends State<LiveRoomPage>
     );
   }
 
-  Widget get onlineWidget => GestureDetector(
+  Widget get onlineWidget => TvTap(
     onTap: _showRank,
     child: Obx(() {
       if (_liveRoomController.onlineCount.value case final onlineCount?) {
@@ -561,7 +562,7 @@ class _LiveRoomPageState extends State<LiveRoomPage>
                 if (roomInfoH5 == null) {
                   return const SizedBox.shrink();
                 }
-                return GestureDetector(
+                return TvTap(
                   behavior: HitTestBehavior.opaque,
                   onTap: () =>
                       Get.toNamed('/member?mid=${roomInfoH5.roomInfo?.uid}'),
@@ -794,7 +795,7 @@ class _LiveRoomPageState extends State<LiveRoomPage>
         border: Border(top: BorderSide(color: Color(0x1AFFFFFF))),
         color: Color(0x1AFFFFFF),
       ),
-      child: GestureDetector(
+      child: TvTap(
         onTap: _liveRoomController.onSendDanmaku,
         behavior: .opaque,
         child: Padding(

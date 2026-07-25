@@ -64,6 +64,7 @@ import 'package:easy_debounce/easy_throttle.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart' show compute;
 import 'package:flutter/material.dart' hide showBottomSheet;
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -924,7 +925,7 @@ class HeaderControlState extends State<HeaderControl>
                 SliverToBoxAdapter(
                   child: SizedBox(
                     height: 45,
-                    child: GestureDetector(
+                    child: TvTap(
                       onTap: () => SmartDialog.showToast(
                         '标灰画质需要bilibili会员（已是会员？请关闭无痕模式）；4k和杜比视界播放效果可能不佳',
                       ),

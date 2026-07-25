@@ -8,6 +8,7 @@ import 'package:PiliPlus/pages/fav/note/controller.dart';
 import 'package:PiliPlus/pages/fav/note/widget/item.dart';
 import 'package:PiliPlus/utils/grid.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:get/get.dart';
 
 class FavNoteChildPage extends StatefulWidget {
@@ -100,7 +101,7 @@ class _FavNoteChildPageState extends State<FavNoteChildPage>
                         },
                       ),
                     ),
-                    GestureDetector(
+                    TvTap(
                       behavior: HitTestBehavior.opaque,
                       onTap: () => _favNoteController.handleSelect(
                         checked: !_favNoteController.allSelected.value,

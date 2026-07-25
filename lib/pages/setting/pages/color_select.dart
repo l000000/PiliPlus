@@ -19,6 +19,7 @@ import 'package:PiliPlus/utils/theme_utils.dart';
 import 'package:collection/collection.dart';
 import 'package:flex_seed_scheme/flex_seed_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 
@@ -147,7 +148,7 @@ class _ColorSelectPageState extends State<ColorSelectPage> {
                   runSpacing: 18,
                   children: colorThemeTypes.mapIndexed(
                     (i, e) {
-                      return GestureDetector(
+                      return TvTap(
                         behavior: .opaque,
                         onTap: () {
                           ctr.currentColor.value = i;

@@ -39,6 +39,7 @@ import 'package:PiliPlus/utils/storage_key.dart';
 import 'package:PiliPlus/utils/utils.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart' hide DraggableScrollableSheet;
+import 'package:PiliPlus/tv/tv_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -548,7 +549,7 @@ class _AudioPageState extends State<AudioPage> {
   }) {
     final isCurr = playMode == _controller.playMode.value;
     final color = isCurr ? colorScheme.primary : colorScheme.outline;
-    return GestureDetector(
+    return TvTap(
       behavior: HitTestBehavior.opaque,
       onTap: () {
         Get.back();
@@ -923,7 +924,7 @@ class _AudioPageState extends State<AudioPage> {
                   physics: platformClampingPhysics,
                   children: [
                     Center(
-                      child: GestureDetector(
+                      child: TvTap(
                         onTap: () => PageUtils.imageView(
                           imgList: [SourceModel(url: cover)],
                         ),
@@ -945,7 +946,7 @@ class _AudioPageState extends State<AudioPage> {
                     ),
                     const SizedBox(height: 12),
                     if (audioItem.owner.hasName()) ...[
-                      GestureDetector(
+                      TvTap(
                         behavior: HitTestBehavior.opaque,
                         onTap: () {
                           _controller.player?.pause();
