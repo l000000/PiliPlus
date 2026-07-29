@@ -5,6 +5,10 @@ import 'package:flutter/material.dart';
 import 'tv_helper.dart';
 
 /// TV 焦点包裹器 — 让任意 widget 支持遥控器方向键导航
+///
+/// 性能优化：
+/// - 没有回调时不创建 DpadFocusable
+/// - 默认不 autofocus，减少焦点冲突
 class TvFocusable extends StatelessWidget {
   final Widget child;
   final VoidCallback? onSelect;
@@ -20,6 +24,8 @@ class TvFocusable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!TvHelper.isTV) return child;
+    // 性能优化：没有回调时不创建 DpadFocusable
+    if (onSelect == null) return child;
     return DpadFocusable(
       onSelect: onSelect,
       autofocus: autofocus,
@@ -94,6 +100,11 @@ class TvIconButton extends StatelessWidget {
 
 /// GestureDetector 的 TV 替代品 — 在 TV 上自动添加遥控器焦点支持
 /// 用法完全兼容：直接把 `GestureDetector(` 换成 `TvTap(`
+///
+/// 性能优化：
+/// 1. 非TV设备直接返回 GestureDetector
+/// 2. 没有点击/长按时不创建额外的 focusable 包装
+/// 3. 避免不必要的 widget 层级
 class TvTap extends StatelessWidget {
   final Widget child;
   final GestureTapDownCallback? onTapDown;
@@ -188,58 +199,108 @@ class TvTap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final gesture = GestureDetector(
-      onTapDown: onTapDown,
-      onTapUp: onTapUp,
-      onTap: onTap,
-      onTapCancel: onTapCancel,
-      onSecondaryTapDown: onSecondaryTapDown,
-      onSecondaryTapUp: onSecondaryTapUp,
-      onSecondaryTap: onSecondaryTap,
-      onSecondaryTapCancel: onSecondaryTapCancel,
-      onTertiaryTapDown: onTertiaryTapDown,
-      onTertiaryTapUp: onTertiaryTapUp,
-      onTertiaryTapCancel: onTertiaryTapCancel,
-      onDoubleTap: onDoubleTap,
-      onLongPress: onLongPress,
-      onLongPressStart: onLongPressStart,
-      onLongPressMoveUpdate: onLongPressMoveUpdate,
-      onLongPressUp: onLongPressUp,
-      onLongPressEnd: onLongPressEnd,
-      onVerticalDragDown: onVerticalDragDown,
-      onVerticalDragStart: onVerticalDragStart,
-      onVerticalDragUpdate: onVerticalDragUpdate,
-      onVerticalDragEnd: onVerticalDragEnd,
-      onVerticalDragCancel: onVerticalDragCancel,
-      onHorizontalDragDown: onHorizontalDragDown,
-      onHorizontalDragStart: onHorizontalDragStart,
-      onHorizontalDragUpdate: onHorizontalDragUpdate,
-      onHorizontalDragEnd: onHorizontalDragEnd,
-      onHorizontalDragCancel: onHorizontalDragCancel,
-      onPanDown: onPanDown,
-      onPanStart: onPanStart,
-      onPanUpdate: onPanUpdate,
-      onPanEnd: onPanEnd,
-      onPanCancel: onPanCancel,
-      onScaleStart: onScaleStart,
-      onScaleUpdate: onScaleUpdate,
-      onScaleEnd: onScaleEnd,
-      onForcePressStart: onForcePressStart,
-      onForcePressPeak: onForcePressPeak,
-      onForcePressUpdate: onForcePressUpdate,
-      onForcePressEnd: onForcePressEnd,
-      behavior: behavior,
-      excludeFromSemantics: excludeFromSemantics,
-      dragStartBehavior: dragStartBehavior,
-      child: child,
-    );
-    if (!TvHelper.isTV || onTap == null && onLongPress == null) {
-      return gesture;
+    // 性能优化：非TV设备直接返回简单的 GestureDetector
+    final isTV = TvHelper.isTV;
+    final hasTapAction = onTap != null || onLongPress != null;
+
+    // 非TV设备或没有点击动作时，直接返回 GestureDetector
+    if (!isTV || !hasTapAction) {
+      return GestureDetector(
+        onTapDown: onTapDown,
+        onTapUp: onTapUp,
+        onTap: onTap,
+        onTapCancel: onTapCancel,
+        onSecondaryTapDown: onSecondaryTapDown,
+        onSecondaryTapUp: onSecondaryTapUp,
+        onSecondaryTap: onSecondaryTap,
+        onSecondaryTapCancel: onSecondaryTapCancel,
+        onTertiaryTapDown: onTertiaryTapDown,
+        onTertiaryTapUp: onTertiaryTapUp,
+        onTertiaryTapCancel: onTertiaryTapCancel,
+        onDoubleTap: onDoubleTap,
+        onLongPress: onLongPress,
+        onLongPressStart: onLongPressStart,
+        onLongPressMoveUpdate: onLongPressMoveUpdate,
+        onLongPressUp: onLongPressUp,
+        onLongPressEnd: onLongPressEnd,
+        onVerticalDragDown: onVerticalDragDown,
+        onVerticalDragStart: onVerticalDragStart,
+        onVerticalDragUpdate: onVerticalDragUpdate,
+        onVerticalDragEnd: onVerticalDragEnd,
+        onVerticalDragCancel: onVerticalDragCancel,
+        onHorizontalDragDown: onHorizontalDragDown,
+        onHorizontalDragStart: onHorizontalDragStart,
+        onHorizontalDragUpdate: onHorizontalDragUpdate,
+        onHorizontalDragEnd: onHorizontalDragEnd,
+        onHorizontalDragCancel: onHorizontalDragCancel,
+        onPanDown: onPanDown,
+        onPanStart: onPanStart,
+        onPanUpdate: onPanUpdate,
+        onPanEnd: onPanEnd,
+        onPanCancel: onPanCancel,
+        onScaleStart: onScaleStart,
+        onScaleUpdate: onScaleUpdate,
+        onScaleEnd: onScaleEnd,
+        onForcePressStart: onForcePressStart,
+        onForcePressPeak: onForcePressPeak,
+        onForcePressUpdate: onForcePressUpdate,
+        onForcePressEnd: onForcePressEnd,
+        behavior: behavior,
+        excludeFromSemantics: excludeFromSemantics,
+        dragStartBehavior: dragStartBehavior,
+        child: child,
+      );
     }
+
+    // TV设备且有点击动作，添加 DpadFocusable
     return DpadFocusable(
       onSelect: onTap,
       onLongSelect: onLongPress,
-      child: gesture,
+      child: GestureDetector(
+        onTapDown: onTapDown,
+        onTapUp: onTapUp,
+        onTap: null, // 由 DpadFocusable 处理
+        onTapCancel: onTapCancel,
+        onSecondaryTapDown: onSecondaryTapDown,
+        onSecondaryTapUp: onSecondaryTapUp,
+        onSecondaryTap: onSecondaryTap,
+        onSecondaryTapCancel: onSecondaryTapCancel,
+        onTertiaryTapDown: onTertiaryTapDown,
+        onTertiaryTapUp: onTertiaryTapUp,
+        onTertiaryTapCancel: onTertiaryTapCancel,
+        onDoubleTap: onDoubleTap,
+        onLongPress: null, // 由 DpadFocusable 处理
+        onLongPressStart: onLongPressStart,
+        onLongPressMoveUpdate: onLongPressMoveUpdate,
+        onLongPressUp: onLongPressUp,
+        onLongPressEnd: onLongPressEnd,
+        onVerticalDragDown: onVerticalDragDown,
+        onVerticalDragStart: onVerticalDragStart,
+        onVerticalDragUpdate: onVerticalDragUpdate,
+        onVerticalDragEnd: onVerticalDragEnd,
+        onVerticalDragCancel: onVerticalDragCancel,
+        onHorizontalDragDown: onHorizontalDragDown,
+        onHorizontalDragStart: onHorizontalDragStart,
+        onHorizontalDragUpdate: onHorizontalDragUpdate,
+        onHorizontalDragEnd: onHorizontalDragEnd,
+        onHorizontalDragCancel: onHorizontalDragCancel,
+        onPanDown: onPanDown,
+        onPanStart: onPanStart,
+        onPanUpdate: onPanUpdate,
+        onPanEnd: onPanEnd,
+        onPanCancel: onPanCancel,
+        onScaleStart: onScaleStart,
+        onScaleUpdate: onScaleUpdate,
+        onScaleEnd: onScaleEnd,
+        onForcePressStart: onForcePressStart,
+        onForcePressPeak: onForcePressPeak,
+        onForcePressUpdate: onForcePressUpdate,
+        onForcePressEnd: onForcePressEnd,
+        behavior: behavior,
+        excludeFromSemantics: excludeFromSemantics,
+        dragStartBehavior: dragStartBehavior,
+        child: child,
+      ),
     );
   }
 }

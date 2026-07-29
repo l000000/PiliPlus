@@ -5,6 +5,7 @@ import 'dart:math' as math;
 import 'package:PiliPlus/pages/common/common_intro_controller.dart';
 import 'package:PiliPlus/pages/video/introduction/ugc/controller.dart';
 import 'package:PiliPlus/plugin/pl_player/controller.dart';
+import 'package:PiliPlus/tv/tv_helper.dart';
 import 'package:PiliPlus/utils/platform_utils.dart';
 import 'package:PiliPlus/utils/storage.dart';
 import 'package:PiliPlus/utils/storage_key.dart';
@@ -34,7 +35,12 @@ class PlayerFocus extends StatelessWidget {
   final ValueGetter<bool>? onSkipSegment;
   final VoidCallback? onRefresh;
 
-  static bool _shouldHandle(LogicalKeyboardKey logicalKey) {
+  /// 在TV设备上，方向键用于焦点导航而不是播放器控制
+  static bool _shouldHandleForFocus(LogicalKeyboardKey logicalKey) {
+    // TV设备上方向键不在此处拦截，留给Dpad系统处理
+    if (TvHelper.isTV) {
+      return logicalKey == LogicalKeyboardKey.tab;
+    }
     return logicalKey == LogicalKeyboardKey.tab ||
         logicalKey == LogicalKeyboardKey.arrowLeft ||
         logicalKey == LogicalKeyboardKey.arrowRight ||
@@ -48,7 +54,7 @@ class PlayerFocus extends StatelessWidget {
       autofocus: true,
       onKeyEvent: (node, event) {
         final handled = _handleKey(event);
-        if (handled || _shouldHandle(event.logicalKey)) {
+        if (handled || _shouldHandleForFocus(event.logicalKey)) {
           return KeyEventResult.handled;
         }
         return KeyEventResult.ignored;
@@ -88,6 +94,17 @@ class PlayerFocus extends StatelessWidget {
 
   bool _handleKey(KeyEvent event) {
     final key = event.logicalKey;
+
+    // TV设备上方向键不用于播放器控制，而是用于焦点导航
+    if (TvHelper.isTV) {
+      if (key == LogicalKeyboardKey.arrowUp ||
+          key == LogicalKeyboardKey.arrowDown ||
+          key == LogicalKeyboardKey.arrowLeft ||
+          key == LogicalKeyboardKey.arrowRight) {
+        // 在TV上不拦截方向键，让Dpad系统处理焦点导航
+        return false;
+      }
+    }
 
     final isKeyQ = key == LogicalKeyboardKey.keyQ;
     if (isKeyQ || key == LogicalKeyboardKey.keyR) {
@@ -241,6 +258,10 @@ class PlayerFocus extends StatelessWidget {
       if (!plPlayerController.isLive) {
         switch (key) {
           case LogicalKeyboardKey.arrowLeft:
+            // TV设备上不处理方向键
+            if (TvHelper.isTV) {
+              return false;
+            }
             if (hasPlayer) {
               plPlayerController.onBackward(
                 plPlayerController.fastForBackwardDuration,
