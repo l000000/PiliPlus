@@ -30,8 +30,8 @@ abstract final class TvHelper {
 
   /// 内部检测逻辑
   static bool _detectTV() {
-    final view = PlatformDispatcher.views.first;
-    final size = view.physicalSize / view.devicePixelRatio;
+    final dispatcher = PlatformDispatcher.instance;
+    final size = dispatcher.physicalSize / dispatcher.devicePixelRatio;
     final width = size.width;
     final height = size.height;
 
