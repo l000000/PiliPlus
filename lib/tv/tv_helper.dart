@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'dart:ui';
+import 'dart:ui' show window;
 
 import 'package:dpad/dpad.dart';
 import 'package:flutter/foundation.dart';
@@ -30,8 +30,7 @@ abstract final class TvHelper {
 
   /// 内部检测逻辑
   static bool _detectTV() {
-    final dispatcher = PlatformDispatcher.instance;
-    final size = dispatcher.physicalSize / dispatcher.devicePixelRatio;
+    final size = window.physicalSize / window.devicePixelRatio;
     final width = size.width;
     final height = size.height;
 
